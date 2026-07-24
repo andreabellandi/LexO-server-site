@@ -24,10 +24,19 @@ $(document).ready(function () {
     });
 
     const $vocaboProject = $('#projects .project-row').first();
-    $vocaboProject.find('.project-icon').attr({
-        src: 'assets/images/vocabo-icon.png',
-        alt: 'VocaBO project icon'
-    });
+    $vocaboProject.find('.project-icon')
+        .attr({
+            src: 'assets/images/vocabo-icon.png',
+            alt: 'VocaBO project icon'
+        })
+        .css({
+            width: '70px',
+            height: '70px',
+            padding: '4px',
+            boxSizing: 'border-box',
+            objectFit: 'contain',
+            alignSelf: 'center'
+        });
     $vocaboProject.find('.project-title-col').css('align-self', 'center');
 });
 
