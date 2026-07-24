@@ -149,18 +149,12 @@ function setupCorpusApi() {
         }).appendTo('head');
     }
 
-    const $ecdMenuItem = $('.dropdown-menu a')
-        .filter(function () {
-            return $(this).text().trim() === 'ECD API';
-        })
-        .closest('li');
-
-    if (!$('.dropdown-menu a').filter(function () {
-        return $(this).text().trim() === 'Corpus API';
-    }).length) {
-        $('<li><a onclick="navigate(\'api-corpus\')">Corpus API</a></li>')
-            .insertBefore($ecdMenuItem);
-    }
+    $('.dropdown-menu').html(`
+        <li><a onclick="navigate('api-lexicon')">Lexicon API</a></li>
+        <li><a onclick="navigate('api-dictionary')">Dictionary API</a></li>
+        <li><a onclick="navigate('api-ecd')">Explanatory Combinatorial Dictionary API</a></li>
+        <li><a onclick="navigate('api-corpus')">Corpus API</a></li>
+    `);
 
     if (!$('#api-corpus').length) {
         const $section = $('<section>', {
@@ -171,7 +165,7 @@ function setupCorpusApi() {
 
         const $ecdSection = $('#api-ecd');
         if ($ecdSection.length) {
-            $section.insertBefore($ecdSection);
+            $section.insertAfter($ecdSection);
         } else {
             $('main').append($section);
         }
