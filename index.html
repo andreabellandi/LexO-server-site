@@ -1,424 +1,37 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LexO-server Suite: RESTful services for collaborative management of linguistic resources as Linked Data.">
     <title>LexO-server | Language Resources Management</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --inst-blue: #0f172a;
-            --inst-red: #7c1d1d;
-            --bg-paper: #fdfdfb;
-            --text-main: #2d2d2d;
-            --border-color: #d1d5db;
-            --nav-footer-height: 52px;
-            --side-padding: 10%; 
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        html, body { 
-            height: 100%; 
-            overflow: hidden; 
-        }
-
-        body { 
-            font-family: 'Source Sans Pro', sans-serif; 
-            background-color: var(--bg-paper); 
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-        }
-
-        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--inst-blue); }
-
-        /* --- Header --- */
-        header {
-            background: white;
-            border-bottom: 3px solid var(--inst-red);
-            padding: 0 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-            height: 140px;
-        }
-
-        .brand-container { display: flex; align-items: center; gap: 20px; cursor: pointer; }
-         .logo-research {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--inst-red);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            color: var(--inst-red);
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .title-group h1 { font-size: 2.5rem; letter-spacing: -0.5px; margin-bottom: 5px; }
-        .title-group p { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--inst-red); font-weight: 600; }
-
-        .logo-svg { 
-            width: 150px; 
-            height: 110px; 
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .logo-svg:hover { transform: scale(1.05); }
-
-        /* --- Navigazione --- */
-        nav {
-            background: var(--inst-blue);
-            padding: 0 5%;
-            height: var(--nav-footer-height);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            position: relative;
-            z-index: 2000;
-        }
-
-        nav ul { display: flex; list-style: none; height: 100%; }
-        nav ul li { position: relative; height: 100%; }
-        nav ul li a {
-            display: flex; align-items: center; height: 100%; padding: 0 20px;
-            color: white; text-decoration: none; font-size: 0.95rem; cursor: pointer;
-        }
-        nav ul li a:hover { background: rgba(255,255,255,0.1); }
-
-        .dropdown-menu {
-            display: none; 
-            position: absolute; 
-            top: 100%; 
-            left: 0;
-            background-color: #ffffff; 
-            min-width: 280px; 
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-            z-index: 3000; 
-            border-top: 3px solid var(--inst-red); 
-            list-style: none;
-        }
-        .dropdown-menu li { 
-            border-bottom: 1px solid #eee; 
-            background-color: #ffffff; 
-        }
-        .dropdown-menu li a { 
-            color: var(--inst-blue) !important; 
-            padding: 12px 20px; 
-            display: block; 
-            width: 100%;
-        }
-        .dropdown-menu li a:hover { background-color: #f8fafc; }
-
-        /* --- Main Content --- */
-        main { 
-            padding: 50px var(--side-padding); 
-            flex: 1; overflow-y: auto; 
-            background-color: var(--bg-paper);
-        }
-
-        section { display: none; animation: fadeIn 0.4s ease; }
-        section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .content-block { margin-bottom: 40px; }
-        .content-block p { margin-bottom: 20px; font-size: 1.1rem; text-align: justify; }
-
-        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; font-size: 0.9rem; }
-        th, td { border: 1px solid var(--border-color); padding: 12px 15px; text-align: left; }
-        th { background: #f1f5f9; color: var(--inst-blue); text-transform: uppercase; font-size: 0.8rem; }
-        .method { font-weight: bold; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
-        .get { color: #065f46; background: #d1fae5; }
-        .post { color: #1e40af; background: #dbeafe; }
-
-        /* --- Paper Styles (Used in Projects and Papers sections) --- */
-        .paper-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px; 
-            padding-bottom: 15px; 
-            border-bottom: 1px dashed var(--border-color); 
-        }
-
-        .paper-info { flex: 1; }
-
-        .pdf-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: var(--inst-red);
-            font-weight: bold;
-            font-size: 0.75rem;
-            transition: opacity 0.2s;
-            min-width: 50px;
-        }
-
-        .pdf-link:hover { opacity: 0.7; }
-        .pdf-icon { font-size: 1.8rem; margin-bottom: 2px; }
-        .pdf-label { text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .paper-title { font-weight: 600; color: var(--inst-red); display: block; font-size: 1.15rem; }
-        .paper-meta { display: block; color: #555; font-size: 0.95rem; margin-top: 4px; }
-        .paper-pub { display: block; font-style: italic; color: #666; font-size: 0.95rem; }
-
-        .status-badge {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-size: 0.65rem;
-            background-color: var(--status-green-bg);
-            color: var(--status-green-text);
-            padding: 2px 8px;
-            border-radius: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 700;
-            border: 1px solid rgba(22, 101, 52, 0.2);
-            margin-left: 5px;
-        }
-        /* --- Footer --- */
-        footer {
-            background: #f1f1f1; 
-            border-top: 1px solid var(--border-color);
-            height: var(--nav-footer-height); 
-            padding: 0 var(--side-padding); 
-            flex-shrink: 0; 
-            display: flex; 
-            align-items: center;
-        }
-
-        .footer-content { 
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr; 
-            width: 100%; 
-            align-items: center; 
-        }
-
-        .footer-logo-left { display: flex; justify-content: flex-start; }
-        .footer-copyright { text-align: center; font-size: 0.85rem; color: #666; white-space: nowrap; }
-        .footer-logo-right { display: flex; justify-content: flex-end; }
-        .footer-logo-ilc { height: 25px; width: auto; }
-        .footer-logo-clarin { height: 38px; width: auto; }
-
-        /* --- Highlight box used in various sections --- */
-        .highlight-box { background: #f8fafc; border-left: 4px solid var(--inst-blue); padding: 20px; margin: 30px 0; font-style: italic; color: var(--inst-blue); }
-
-        /* --- Architecture Styles Updated --- */
-        .architecture-container {
-            position: relative;
-            padding-left: 0;
-            margin-top: 30px;
-        }
-
-        .model-entry {
-            position: relative;
-            margin-bottom: 50px;
-            padding-bottom: 10px;
-        }
-
-        .model-entry h3 {
-            color: var(--inst-blue);
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .model-meta {
-            font-size: 0.85rem;
-            color: var(--inst-red);
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        /* Descrizione con sfondo e linea verticale rossa */
-        .model-desc {
-            font-size: 1rem;
-            margin: 10px 0 15px 40px; 
-            max-width: 800px;
-            line-height: 1.6;
-            background: #f8fafc;
-            border-left: 4px solid var(--inst-red);
-            padding: 15px 20px;
-            border-radius: 0 4px 4px 0;
-        }
-
-        /* Reference Paper: solo testo e indentato */
-        .paper-line {
-            display: block;
-            font-size: 0.88rem;
-            color: #4b5563;
-            margin-left: 60px;
-            margin-top: 10px;
-            line-height: 1.5;
-            max-width: 750px;
-        }
-
-        .paper-line i { font-style: italic; color: var(--inst-blue); font-weight: 500; }
-        .paper-line .paper-label { 
-            text-transform: uppercase; 
-            font-size: 0.7rem; 
-            font-weight: 800; 
-            color: var(--inst-red); 
-            display: block; 
-            margin-bottom: 4px; 
-            letter-spacing: 1px; 
-        }
-
-        .details-link {
-            font-size: 0.7rem;
-            color: var(--inst-blue);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            text-decoration: none;
-            cursor: pointer;
-            font-weight: 600;
-            background: #eee;
-            padding: 2px 8px;
-            border-radius: 10px;
-            vertical-align: middle;
-            margin-left: 10px;
-            display: inline-block;
-            transition: all 0.2s ease;
-        }
-        .details-link:hover { background: var(--inst-red); color: white; }
-
-        /* --- Home Section Features --- */
-        .hero-section { padding: 10px 0 30px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 40px; }
-        .main-title { font-size: 2.8rem; line-height: 1.2; margin-bottom: 15px; }
-        .accent-text { color: var(--inst-red); font-weight: 600; }
-        .lead-paragraph { font-size: 1.2rem; line-height: 1.6; color: #444; max-width: 850px; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
-        .feature-card { background: white; padding: 25px; border: 1px solid var(--border-color); border-radius: 2px; text-align: left; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease; }
-        .feature-card:hover { background-color: #f1f5f9; border-color: var(--inst-blue); }
-        .feature-card h3 { font-size: 1.15rem; margin-bottom: 10px; color: var(--inst-red); display: flex; align-items: center; gap: 10px; }
-        .feature-card p { font-size: 0.95rem; color: #555; line-height: 1.5; }
-
-.param-list {
-    display: block;      /* Fa andare a capo il blocco */
-    font-size: 0.85em;   /* Rende il carattere più piccolo */
-    color: #666;         /* Opzionale: un grigio per staccare visivamente */
-    margin-left: 15px;   /* Indenta a destra */
-    margin-top: 5px;     /* Aggiunge un po' di spazio dall'endpoint */
-    line-height: 1.4;    /* Migliora la leggibilità delle righe ravvicinate */
-}
-
-/* Stile per la cella del Payload */
-.payload-cell {
-    background-color: #f8fafc; /* Grigio chiarissimo per distinguere il codice */
-    vertical-align: top;
-}
-
-.json-block {
-    font-family: 'Consolas', 'monaco', monospace; /* Font tecnico */
-    font-size: 0.8em;                             /* Font piccolo */
-    color: #475569;                              /* Colore neutro scuro */
-    margin: 0;
-    padding: 8px;
-    white-space: pre-wrap;                       /* Mantiene l'indentazione ma va a capo se troppo lungo */
-    line-height: 1.3;
-}
-
-/* Badge base */
-.status-badge {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 0.65rem;
-    padding: 2px 8px;
-    border-radius: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 8px;
-}
-
-/* Variante VERDE (Full) */
-.status-full {
-    background-color: #dcfce7;
-    color: #166534;
-    border: 1px solid rgba(22, 101, 52, 0.2);
-}
-
-/* Variante GIALLA (Partial) */
-.status-partial {
-    background-color: #fef9c3;
-    color: #854d0e;
-    border: 1px solid rgba(133, 77, 14, 0.2);
-}
-
-/* Variante ROSSA (Not Implemented / Planned) */
-.status-none {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border: 1px solid rgba(153, 27, 27, 0.2);
-}
-
-/* --- Project Grid Extension --- */
-.project-row {
-    display: grid;
-    grid-template-columns: 80px 200px 1fr;
-    gap: 30px;
-    align-items: start;
-    padding: 25px 0;
-    border-bottom: 1px dashed var(--border-color);
-}
-.project-icon {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-}
-.project-title-col {
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    color: var(--inst-red);
-    font-size: 1.15rem;
-}
-.project-desc-col {
-    font-family: 'Source Sans Pro', sans-serif;
-    color: #555;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    text-align: justify;
-}
-
-    </style>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
 </head>
 <body>
-
     <header>
-        <div class="brand-container">
-            <div class="logo-research" onclick="navigate('home')">L</div>
+        <div class="brand-container" onclick="navigate('home')">
+            <div class="logo-research" aria-hidden="true">L</div>
             <div class="title-group">
-                <h1 onclick="navigate('home')">LexO-server Suite</h1>
-                <p onclick="navigate('home')">Linguistic Resources & Linked Data Infrastructure</p>
+                <h1>LexO-server Suite</h1>
+                <p>Linguistic Resources &amp; Linked Data Infrastructure</p>
             </div>
         </div>
 
-        <svg class="logo-svg" viewBox="0 0 120 100" onclick="navigate('home')" fill="none">
+        <svg class="logo-svg" viewBox="0 0 120 100" onclick="navigate('home')" fill="none" role="img" aria-label="LexO-server logo">
             <path d="M10 30 C 10 25, 30 25, 60 30 C 90 25, 110 25, 110 30 L 110 85 C 110 80, 90 80, 60 85 C 30 80, 10 80, 10 85 Z" fill="white" stroke="#0f172a" stroke-width="1.2"/>
             <path d="M60 30 L 60 85" stroke="#0f172a" stroke-width="0.8"/>
             <g fill="#7c1d1d">
-                <circle cx="35" cy="45" r="3"/>
-                <circle cx="50" cy="55" r="3"/>
-                <circle cx="40" cy="70" r="3"/>
-                <circle cx="75" cy="42" r="3"/>
-                <circle cx="85" cy="65" r="3"/>
-                <circle cx="70" cy="75" r="3"/>
+                <circle cx="35" cy="45" r="3"/><circle cx="50" cy="55" r="3"/><circle cx="40" cy="70" r="3"/>
+                <circle cx="75" cy="42" r="3"/><circle cx="85" cy="65" r="3"/><circle cx="70" cy="75" r="3"/>
             </g>
             <g stroke="#7c1d1d" stroke-width="0.8" opacity="0.5">
-                <line x1="35" y1="45" x2="50" y2="55"/>
-                <line x1="50" y1="55" x2="40" y2="70"/>
-                <line x1="75" y1="42" x2="85" y2="65"/>
-                <line x1="85" y1="65" x2="70" y2="75"/>
+                <line x1="35" y1="45" x2="50" y2="55"/><line x1="50" y1="55" x2="40" y2="70"/>
+                <line x1="75" y1="42" x2="85" y2="65"/><line x1="85" y1="65" x2="70" y2="75"/>
                 <line x1="50" y1="55" x2="75" y2="42" stroke="#0f172a" stroke-dasharray="2,1"/>
             </g>
             <g transform="translate(95, 15) rotate(15)">
@@ -428,14 +41,14 @@
         </svg>
     </header>
 
-    <nav>
+    <nav aria-label="Main navigation">
         <ul>
             <li><a onclick="navigate('home')">Home</a></li>
-            <li><a onclick="navigate('models')">Lingistic Data Models</a></li>
+            <li><a onclick="navigate('models')">Linguistic Data Models</a></li>
             <li><a onclick="navigate('othermodels')">Other Data Models</a></li>
             <li><a onclick="navigate('types')">Resource Types</a></li>
             <li class="dropdown">
-                <a id="services-trigger">Services Documentation ▾</a>
+                <a id="services-trigger" aria-haspopup="true" aria-expanded="false">Services Documentation ▾</a>
                 <ul class="dropdown-menu">
                     <li><a onclick="navigate('api-lexicon')">Lexicon API</a></li>
                     <li><a onclick="navigate('api-wordnet')">WordNet API</a></li>
@@ -444,41 +57,30 @@
                 </ul>
             </li>
             <li><a onclick="navigate('projects')">Projects</a></li>
-            <li><a href="https://github.com/ilc-cnr/LexO-server" target="_blank">How to Install</a></li>
+            <li><a href="https://github.com/ilc-cnr/LexO-server" target="_blank" rel="noopener noreferrer">How to Install</a></li>
             <li><a onclick="navigate('papers')">Papers</a></li>
         </ul>
     </nav>
 
     <main>
-
         <section id="home" class="active">
             <div class="hero-section">
                 <h2 class="main-title">Welcome to <span class="accent-text">LexO-server Suite</span></h2>
-                <p class="lead-paragraph">
-                    A RESTful service infrastructure designed for the collaborative management of linguistic resources modeled according to the <strong>Linked Data</strong> paradigm.
-                </p>
+                <p class="lead-paragraph">A RESTful service infrastructure designed for the collaborative management of linguistic resources modeled according to the <strong>Linked Data</strong> paradigm.</p>
             </div>
-
-            <div class="highlight-box">
-                Enables the creation, editing, and deletion of complex dictionaries and lexicons, modeled as interoperable Knowledge Graphs.
-            </div>
-
+            <div class="highlight-box">Enables the creation, editing, and deletion of complex dictionaries and lexicons, modeled as interoperable Knowledge Graphs.</div>
             <div class="features-grid">
-                <div class="feature-card" onclick="navigate('models')">
+                <div class="feature-card" onclick="navigate('models')" tabindex="0">
                     <h3>🔗 Linked Data</h3>
-                    <p>Implementation of international W3C <em>defacto</em> standards such as <strong>OntoLex-Lemon</strong>, <strong>Lexicog</strong>, <strong>SKOS</strong>, and <strong>LexInfo</strong> for data interoperability.</p>
+                    <p>Implementation of international W3C <em>de facto</em> standards such as <strong>OntoLex-Lemon</strong>, <strong>Lexicog</strong>, <strong>SKOS</strong>, and <strong>LexInfo</strong> for data interoperability.</p>
                 </div>
-
-                <div class="feature-card" onclick="navigate('api-lexicon')">
+                <div class="feature-card" onclick="navigate('api-lexicon')" tabindex="0">
                     <h3>🛠 RESTful Management</h3>
                     <p>Robust API services for dynamic manipulation of lexical resources modeled as RDF graphs.</p>
                 </div>
-
-                <div class="feature-card" onclick="navigate('types')">
+                <div class="feature-card" onclick="navigate('types')" tabindex="0">
                     <h3>👥 Authoring</h3>
-                    <p>
-                    Integration with specialized authentication and user-management servers for <strong>user authoring</strong> of lexical elements, along with granular control over <strong>permissions and access rights</strong> (RBAC) across the entire dataset.
-                </p>
+                    <p>Integration with specialized authentication and user-management servers for <strong>user authoring</strong> of lexical elements, along with granular control over <strong>permissions and access rights</strong> (RBAC) across the entire dataset.</p>
                 </div>
             </div>
         </section>
@@ -487,341 +89,132 @@
             <div class="content-block">
                 <h2>Data Model</h2>
                 <div class="highlight-box">
-                    <p>
-                        LexO-server is built on a modular framework. While <em>OntoLex-Lemon</em> and <em>Lexicog</em> constitute the structural 
-                        <span class="model-meta" style="display: inline-block; margin: 0 5px;">Core Models</span> 
-                        of the system, they are designed to be extended by 
-                        <span class="model-meta" style="display: inline-block; margin: 0 5px;">Complementary Modules</span>.
-                    </p>
+                    <p>LexO-server is built on a modular framework. While <em>OntoLex-Lemon</em> and <em>Lexicog</em> constitute the structural <span class="model-meta" style="display:inline-block;margin:0 5px">Core Models</span> of the system, they are designed to be extended by <span class="model-meta" style="display:inline-block;margin:0 5px">Complementary Modules</span>.</p>
                 </div>
-
                 <div class="architecture-container">
-                    
                     <div class="model-entry">
                         <div class="model-meta">Core Model</div>
                         <h3>OntoLex-Lemon <span class="status-badge status-full">fully implemented</span></h3>
-                        <p class="model-desc">The foundational standard for publishing lexicons on the Semantic Web, enabling the seamless integration between lexical data and ontologies. <a href="https://www.w3.org/community/ontolex/wiki/Final_Model_Specification" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            McCrae, J. P., Bosque-Gil, J., Gracia, J., Buitelaar, P., Cimiano, P. (2017) <i>The Ontolex-Lemon model: development and applications.</i> In Proceedings of eLex 2017 conference (pp. 19-21).
-                        </div>
+                        <p class="model-desc">The foundational standard for publishing lexicons on the Semantic Web, enabling the seamless integration between lexical data and ontologies. <a href="https://www.w3.org/community/ontolex/wiki/Final_Model_Specification" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>McCrae, J. P., Bosque-Gil, J., Gracia, J., Buitelaar, P., Cimiano, P. (2017) <i>The Ontolex-Lemon model: development and applications.</i> In Proceedings of eLex 2017 conference (pp. 19–21).</div>
                     </div>
-
                     <div class="model-entry">
                         <div class="model-meta">Core Model</div>
                         <h3>Lexicog <span class="status-badge status-full">fully implemented</span></h3>
-                        <p class="model-desc">Designed to reflect traditional dictionary structures and the formal organization of lexicographic entries. <a href="https://www.w3.org/2019/09/lexicog/" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            Bosque-Gil, J., Gracia, J., Montiel-Ponsoda, E. (2017) <i>Towards a Module for Lexicography in OntoLex.</i> In Proceedings of the 1<sup>st</sup> Workshop on the OntoLex Model (pp. 74–84).
-                        </div>
+                        <p class="model-desc">Designed to reflect traditional dictionary structures and the formal organization of lexicographic entries. <a href="https://www.w3.org/2019/09/lexicog/" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>Bosque-Gil, J., Gracia, J., Montiel-Ponsoda, E. (2017) <i>Towards a Module for Lexicography in OntoLex.</i> In Proceedings of the 1<sup>st</sup> Workshop on the OntoLex Model (pp. 74–84).</div>
                     </div>
-
                     <div class="model-entry">
                         <div class="model-meta">Complementary module</div>
                         <h3>Decomposition <span class="status-badge status-full">fully implemented</span></h3>
-                        <p class="model-desc">Modeling the internal structure of compound words and multi-word expressions. <a href="https://www.w3.org/2016/05/ontolex/#decomposition-decomp" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            Benzoni, E., Pellegrini, M., Dedè, F., Passarotti, M. (2024) <i>Representing Compounding with OntoLex. An Evaluation of Vocabularies for Word Formation Resources.</i> In Proceedings of the LREC-COLING Conference (pp. 13958-13969).
-                        </div>
+                        <p class="model-desc">Modeling the internal structure of compound words and multi-word expressions. <a href="https://www.w3.org/2016/05/ontolex/#decomposition-decomp" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>Benzoni, E., Pellegrini, M., Dedè, F., Passarotti, M. (2024) <i>Representing Compounding with OntoLex. An Evaluation of Vocabularies for Word Formation Resources.</i> In Proceedings of LREC-COLING (pp. 13958–13969).</div>
                     </div>
-
                     <div class="model-entry">
                         <div class="model-meta">Complementary module</div>
-                        <h3>Variation & Translation <span class="status-badge status-partial">partially implemented</span></h3>
-                        <p class="model-desc">Managing semantic relations between variants and cross-lingual translations. <a href="https://www.w3.org/2016/05/ontolex/#variation-translation-vartrans" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            Bosque-Gil, J., Gracia, J., Aguado-de-Cea, G., Montiel-Ponsoda, E. (2015) <i>Applying the ontolex model to a multilingual terminological resource.</i> In Proceedings of the European Semantic Web Conference (pp. 283-294).
-                        </div>
+                        <h3>Variation &amp; Translation <span class="status-badge status-partial">partially implemented</span></h3>
+                        <p class="model-desc">Managing semantic relations between variants and cross-lingual translations. <a href="https://www.w3.org/2016/05/ontolex/#variation-translation-vartrans" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>Bosque-Gil, J., Gracia, J., Aguado-de-Cea, G., Montiel-Ponsoda, E. (2015) <i>Applying the OntoLex model to a multilingual terminological resource.</i> In Proceedings of the European Semantic Web Conference (pp. 283–294).</div>
                     </div>
-
                     <div class="model-entry">
                         <div class="model-meta">Complementary module</div>
-                        <h3>Syntax & Semantics <span class="status-badge status-none">not implemented</span></h3>
-                        <p class="model-desc">The interface between lexical items and their syntactic behavior and semantic argument structure. <a href="https://www.w3.org/2016/05/ontolex/#syntax-and-semantics-synsem" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference:</span>
-                            <i><a href="https://www.w3.org/2016/05/ontolex/#syntax-and-semantics-synsem">W3C Ontolex specification.</a></i>
-                        </div>
+                        <h3>Syntax &amp; Semantics <span class="status-badge status-none">not implemented</span></h3>
+                        <p class="model-desc">The interface between lexical items and their syntactic behavior and semantic argument structure. <a href="https://www.w3.org/2016/05/ontolex/#syntax-and-semantics-synsem" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
                     </div>
-
                     <div class="model-entry">
                         <div class="model-meta">Complementary module</div>
                         <h3>FrAC <span class="status-badge status-none">not implemented</span></h3>
-                        <p class="model-desc">Integrating frequencies, attestations, and data from external corpora. <a href="https://ontolex.github.io/frequency-attestation-corpus-information/" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            Chiarcos, C., Apostol, E. S., Kabashi, B., Truică, C. O. (2022) <i>Modelling frequency, attestation, and corpus-based information with OntoLex-FrAC.</i> In Proceedings of the 29<sup>th</sup> International Conference on Computational Linguistics (pp. 4018-4027).
-                        </div>
+                        <p class="model-desc">Integrating frequencies, attestations, and data from external corpora. <a href="https://ontolex.github.io/frequency-attestation-corpus-information/" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>Chiarcos, C., Apostol, E. S., Kabashi, B., Truică, C. O. (2022) <i>Modelling frequency, attestation, and corpus-based information with OntoLex-FrAC.</i> In Proceedings of COLING (pp. 4018–4027).</div>
                     </div>
-                    
                     <div class="model-entry">
                         <div class="model-meta">Complementary module</div>
                         <h3>LemonEty <span class="status-badge status-partial">partially implemented</span></h3>
-                        <p class="model-desc">Representing the history and evolutionary genealogy of lexical units. <a href="https://github.com/anasfkhan81/lemonEty/blob/master/lemonEty.ttl" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            Khan, A. F. (2018) <i>Towards the Representation of Etymological Data on the Semantic Web.</i> Information 9(12), 304.
-                        </div>
+                        <p class="model-desc">Representing the history and evolutionary genealogy of lexical units. <a href="https://github.com/anasfkhan81/lemonEty/blob/master/lemonEty.ttl" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>Khan, A. F. (2018) <i>Towards the Representation of Etymological Data on the Semantic Web.</i> Information 9(12), 304.</div>
                     </div>
-
                     <div class="model-entry">
                         <div class="model-meta">Complementary module</div>
                         <h3>LexFom <span class="status-badge status-full">fully implemented</span></h3>
-                        <p class="model-desc">Representing lexical functions in the Meaning–Text Theory framework and for formally modelling the semantic and combinatorial relations between lexical units. <a href="https://github.com/anasfkhan81/lemonEty/blob/master/lemonEty.ttl" target="_blank" class="details-link">[Module Details]</a></p>
-                        <div class="paper-line">
-                            <span class="paper-label">Reference Paper:</span>
-                            Fonseca, A., Sadat, F., Lareau, F. (2016) <i>Lexfom: a lexical functions ontology model.</i> In Proceedings of the 5<sup>th</sup> Workshop on Cognitive Aspects of the Lexicon (pp. 145-155).
-                        </div>
+                        <p class="model-desc">Representing lexical functions in the Meaning–Text Theory framework and formally modelling semantic and combinatorial relations between lexical units. <a href="https://github.com/alex-fonseca/lexfom" target="_blank" rel="noopener noreferrer" class="details-link">Module Details</a></p>
+                        <div class="paper-line"><span class="paper-label">Reference Paper:</span>Fonseca, A., Sadat, F., Lareau, F. (2016) <i>Lexfom: a lexical functions ontology model.</i> In Proceedings of CogALex (pp. 145–155).</div>
                     </div>
                 </div>
-
-                <div style="margin-top: 30px; font-size: 0.9rem; color: #777; border-top: 1px solid #eee; padding-top: 15px;">
-                    Riferimenti ufficiali: <a href="https://www.w3.org/community/ontolex/" style="color:var(--inst-red)">W3C Community</a> | <a href="https://lexinfo.net/" style="color:var(--inst-red)">Lexinfo.net</a>
-                </div>
             </div>
         </section>
 
-        <section id="othermodels">
-            <div class="content-block">
-                <h2>xxxxx</h2>
-                <div class="paper-item"><span class="paper-title">xxx</span><p>xxx.</p></div>
-            </div>
-        </section>
+        <section id="othermodels"><div class="content-block"><h2>Other Data Models</h2><p>This section will document additional models supported by the LexO-server Suite.</p></div></section>
+        <section id="types"><div class="content-block"><h2>Resource Types</h2><p>Support for dictionaries, WordNets, etymological lexicons, and other linked linguistic resources.</p></div></section>
 
         <section id="api-lexicon">
+            <div class="content-block"><h2>Lexicon Services Documentation</h2><table><thead><tr><th>Method</th><th>Endpoint</th><th>Function</th></tr></thead><tbody><tr><td><span class="method get">GET</span></td><td>/lexicon/entries</td><td>Retrieve the list of lexical entries.</td></tr><tr><td><span class="method post">POST</span></td><td>/lexicon/create</td><td>Create a new resource in the graph.</td></tr></tbody></table></div>
+        </section>
+        <section id="api-wordnet"><div class="content-block"><h2>WordNet API</h2><p>WordNet service documentation will be added here.</p></div></section>
+        <section id="api-dictionary"><div class="content-block"><h2>Dictionary API</h2><p>Dictionary service documentation will be added here.</p></div></section>
+
+        <section id="api-ecd">
             <div class="content-block">
-                <h2>Lexicon Services Documentation</h2>
+                <h2>Explanatory Combinatorial Dictionary Services Documentation</h2>
+                <h3 style="padding-top:10px">Dictionnaire Explicatif et Combinatoire (DEC)</h3>
                 <table>
-                    <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th></tr></thead>
+                    <thead><tr><th>Method</th><th>Endpoint and HTTP parameters</th><th>Payload example</th><th>Function</th></tr></thead>
                     <tbody>
-                        <tr><td><span class="method get">GET</span></td><td>/lexicon/entries</td><td>Recupera l'elenco delle Lexical Entries.</td></tr>
-                        <tr><td><span class="method post">POST</span></td><td>/lexicon/create</td><td>Inizializza una nuova risorsa nel grafo.</td></tr>
+                        <tr><td><span class="method get">GET</span></td><td>/ecd/create/ECDictionary<span class="param-list">lang = ISO language code<br>baseIRI = IRI of the DEC<br>prefix = short prefix for the base IRI</span></td><td>–</td><td>Create a DEC</td></tr>
+                        <tr><td><span class="method post">POST</span></td><td>/ecd/create/ECDEntry<span class="param-list">baseIRI = IRI of the DEC<br>prefix = short prefix for the base IRI</span></td><td class="payload-cell"><pre class="json-block"><code>{
+  "label": "calme",
+  "type": "http://www.w3.org/ns/lemon/ontolex#Word",
+  "language": "fr",
+  "pos": [
+    "http://www.lexinfo.net/ontology/3.0/lexinfo#noun",
+    "http://www.lexinfo.net/ontology/3.0/lexinfo#adjective"
+  ]
+}</code></pre></td><td>Create an entry for a specific DEC</td></tr>
+                        <tr><td><span class="method post">POST</span></td><td>/ecd/create/ECDForm<span class="param-list">ECDEntry = IRI of the entry<br>baseIRI = IRI of the DEC<br>prefix = short prefix for the base IRI</span></td><td class="payload-cell"><pre class="json-block"><code>{
+  "label": "calmes",
+  "type": "http://www.w3.org/ns/lemon/ontolex#otherForm",
+  "language": "fr",
+  "pos": [
+    "http://www.lexinfo.net/ontology/3.0/lexinfo#noun",
+    "http://www.lexinfo.net/ontology/3.0/lexinfo#adjective"
+  ]
+}</code></pre></td><td>Create a form of a DEC entry</td></tr>
+                        <tr><td><span class="method get">GET</span></td><td>/ecd/create/ECDMeaning<span class="param-list">ECDEntry = IRI of the entry<br>baseIRI = IRI of the DEC<br>prefix = short prefix for the base IRI</span></td><td>–</td><td>Create a meaning (an OntoLex lexical sense) for a DEC entry</td></tr>
+                        <tr><td><span class="method post">POST</span></td><td>/ecd/create/lexicalFunction<span class="param-list">baseIRI = IRI of the DEC<br>prefix = short prefix for the base IRI</span></td><td class="payload-cell"><pre class="json-block"><code>{
+  "source": "http://lexica/mylexicon#calme_sense",
+  "target": "http://lexica/mylexicon#olympien_sense",
+  "lexicalFunction": "https://github.com/alex-fonseca/rlfowl/lfrlf.owl#LF-Magn",
+  "type": "https://github.com/alex-fonseca/lexfom/lfrel.owl#ParadigmaticLFSenseRelation"
+}</code></pre></td><td>Create a lexical function between source and target senses</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <section id="types"><h2>Resource Types</h2><div class="content-block"><p>Supporto per dizionari, WordNet e lessici etimologici.</p></div></section>
-        <section id="api-wordnet"><h2>WordNet API</h2><div class="content-block"><p>Documentazione servizi WordNet...</p></div></section>
-        <section id="api-dictionary"><h2>Dictionary API</h2><div class="content-block"><p>Documentazione servizi Dictionary...</p></div></section>
-        <section id="api-ecd">
-             <div class="content-block">
-                <h2>Explanatory Combinatorial Dictionary Services Documentation</h2>
-                <h3 style="padding-top: 10px">Dictionnaire Explicatif et Combinatoire (DEC)</h3>
-                <table>
-    <thead>
-        <tr>
-            <th>Method</th>
-            <th>Endpoint (and HTTP Parameters)</th>
-            <th>Payload (example)</th>
-            <th>Function</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><span class="method get">GET</span></td>
-            <td>
-                /ecd/create/ECDictionary
-                <span class="param-list">
-                    lang = ISO code language for the DEC <br>
-                    baseIRI = IRI of the DEC <br>
-                    prefix = short prefix for the base IRI
-                </span>
-            </td>
-            <td>-</td>
-            <td>Create a DEC</td>
-        </tr>
-        <tr>
-            <td><span class="method post">POST</span></td>
-            <td>
-                /ecd/create/ECDEntry
-                <span class="param-list">
-                    baseIRI = IRI of the DEC <br>
-                    prefix = short prefix for the base IRI
-                </span>
-            </td>
-            <td class="payload-cell">
-                <pre class="json-block">
-                <code>
-{
-    "label": "calme",
-    "type": "http://www.w3.org/ns/lemon/ontolex#Word",
-    "language": "fr",
-    "pos": [ "http://www.lexinfo.net/ontology/3.0/lexinfo#noun", 
-    "http://www.lexinfo.net/ontology/3.0/lexinfo#adjective" ]
-}
-            </code></pre>
-            </td>
-            <td>Create an entry for a specific DEC</td>
-        </tr>
-        <tr>
-            <td><span class="method post">POST</span></td>
-            <td>
-                /ecd/create/ECDForm
-                <span class="param-list">
-                    ECDEntry = IRI of the entry <br>
-                    baseIRI = IRI of the DEC <br>
-                    prefix = short prefix for the base IRI
-                </span>
-            </td>
-            <td class="payload-cell">
-                <pre class="json-block">
-                <code>
-{
-    "label": "calmes",
-    "type": "http://www.w3.org/ns/lemon/ontolex#otherForm",
-    "language": "fr",
-    "pos": [ "http://www.lexinfo.net/ontology/3.0/lexinfo#noun", 
-    "http://www.lexinfo.net/ontology/3.0/lexinfo#adjective" ]
-}
-            </code></pre>
-            </td>
-            <td>Create a form of a DEC entry</td>
-        </tr>
-        <tr>
-            <td><span class="method get">GET</span></td>
-            <td>
-                /ecd/create/ECDMeaning
-                <span class="param-list">
-                    ECDEntry = IRI of the entry <br>
-                    baseIRI = IRI of the DEC <br>
-                    prefix = short prefix for the base IRI
-                </span>
-            </td>
-            <td>-</td>
-            <td>Create a meaning (lexical sense in ontolex-speaking) of a DEC entry</td>
-        </tr>
-        <tr>
-            <td><span class="method post">POST</span></td>
-            <td>
-                /ecd/create/lexicalFunction
-                <span class="param-list">
-                    baseIRI = IRI of the DEC <br>
-                    prefix = short prefix for the base IRI
-                </span>
-            </td>
-            <td class="payload-cell">
-                <pre class="json-block">
-                <code>
-{
-    "source": "http://lexica/mylexicon#calme_sense",
-    "target": "http://lexica/mylexicon#olympien_sense",
-    "lexicalFunction": "https://github.com/alex-fonseca/rlfowl/lfrlf.owl#LF-Magn",
-    "type": "https://github.com/alex-fonseca/lexfom/lfrel.owl#ParadigmaticLFSenseRelation"
-}
-            </code></pre>
-            </td>
-            <td>Create a lexical function among senses (source and target)</td>
-        </tr>
-    </tbody>
-</table>
-            </div>
-        </section>
-        
         <section id="projects">
             <div class="content-block">
                 <h2>Applications of LexO-server in Research Projects</h2>
-                <br/>
-                <div class="project-row">
-                    <img src="icon-vocabo.png" alt="VocaBO Icon" class="project-icon">
-                    <div class="project-title-col"><a href="https://www.ilc.cnr.it/progetti/vocabo/" target="_blank" style="text-decoration: none; color: inherit;">VocaBO</a></div>
-                    <div class="project-desc-col">
-                        It is the first native digital vocabulary devoted to the language of Giovanni Boccaccio, starting from the Decameron and designed to make its lexical richness openly accessible and searchable. The project combines scientific lexicography and Digital Humanities methods, enabling users to explore Boccaccio’s words, meanings, semantic fields, and textual occurrences through a digital environment.
-                    </div>
-                </div>
-                <div class="project-row">
-                    <img src="icon-vocabo.png" alt="VocaBO Icon" class="project-icon">
-                    <div class="project-title-col"><a href="https://www.ilc.cnr.it/en/progetti/ownw/" target="_blank" style="text-decoration: none; color: inherit;">OWNW</a></div>
-                    <div class="project-desc-col">
-                        OWNW – Old Words for a New World: Translating Christianity to Baltic Pagans investigates how Christian religious terminology was translated and adapted in the earliest Baltic catechisms. It combines historical linguistics, religious studies, computational lexicography, and knowledge representation to build a diachronic computational lexicon of Baltic religious terminology.
-                    </div>
-                </div>
-                <div class="project-row">
-                    <img src="icon-vocabo.png" alt="VocaBO Icon" class="project-icon">
-                    <div class="project-title-col"><a href="https://www.ilc.cnr.it/progetti/itant/" target="_blank" style="text-decoration: none; color: inherit;">ItAnt</a></div>
-                    <div class="project-desc-col">
-                        ItAnt (Lingue e culture dell’Italia antica: linguistica storica e modelli digitali) investigates the cultures of ancient Italy through their linguistic documentation, especially epigraphic evidence from the 7<sup>th</sup> to the 1<sup>st</sup> century BCE, combining historical linguistics, philology, epigraphy, and computational methods. The project also developed digital tools and resources, including the DigItAnt platform, to support the creation, management, and interlinking of lexical and epigraphic data according to FAIR and Linked Open Data principles.
-                    </div>
-                </div>
-                <div class="project-row">
-                    <img src="icon-vocabo.png" alt="VocaBO Icon" class="project-icon">
-                    <div class="project-title-col"><a href="https://www.ilc.cnr.it/en/progetti/ditmao/" target="_blank" style="text-decoration: none; color: inherit;">DiTMAO</a></div>
-                    <div class="project-desc-col">
-                        DiTMAO (Dictionnaire de Termes Médico-botaniques de l’Ancien Occitan) is devoted to the creation of a dictionary of Old Occitan medico-botanical terminology, a medieval Romance language with a significant role in medical-scientific culture. The project combines lexicographic, multilingual, and encyclopaedic dimensions, using LexO-server/LexO services to model terms, variants, translations, conceptual references, and links to medico-botanical knowledge.
-                    </div>
-                </div>
-
-                </div>
+                <div class="project-row"><img src="assets/images/project-placeholder.svg" alt="" class="project-icon"><div class="project-title-col"><a href="https://www.ilc.cnr.it/progetti/vocabo/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit">VocaBO</a></div><div class="project-desc-col">The first native digital vocabulary devoted to the language of Giovanni Boccaccio, starting from the <em>Decameron</em>. It combines scientific lexicography and Digital Humanities methods to make words, meanings, semantic fields, and textual occurrences openly accessible and searchable.</div></div>
+                <div class="project-row"><img src="assets/images/project-placeholder.svg" alt="" class="project-icon"><div class="project-title-col"><a href="https://www.ilc.cnr.it/en/progetti/ownw/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit">OWNW</a></div><div class="project-desc-col">OWNW – Old Words for a New World investigates how Christian terminology was translated and adapted in the earliest Baltic catechisms, combining historical linguistics, religious studies, computational lexicography, and knowledge representation.</div></div>
+                <div class="project-row"><img src="assets/images/project-placeholder.svg" alt="" class="project-icon"><div class="project-title-col"><a href="https://www.ilc.cnr.it/progetti/itant/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit">ItAnt</a></div><div class="project-desc-col">ItAnt investigates the cultures of ancient Italy through linguistic and epigraphic documentation, combining historical linguistics, philology, epigraphy, and computational methods according to FAIR and Linked Open Data principles.</div></div>
+                <div class="project-row"><img src="assets/images/project-placeholder.svg" alt="" class="project-icon"><div class="project-title-col"><a href="https://www.ilc.cnr.it/en/progetti/ditmao/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit">DiTMAO</a></div><div class="project-desc-col">DiTMAO is devoted to a dictionary of Old Occitan medico-botanical terminology and uses LexO-server services to model terms, variants, translations, conceptual references, and links to domain knowledge.</div></div>
+            </div>
         </section>
 
         <section id="papers">
             <div class="content-block">
                 <h2>Scientific References</h2>
-                <br/>
-                <div class="paper-item">
-                    <div class="paper-info">
-                        <span class="paper-title">Lexicographic Resources in the Semantic Web: Models, Tools, and Case Studies</span>
-                        <span class="paper-meta">Bellandi, A. (2025)</span>
-                        <span class="paper-pub">Umanistica Digitale, 9(21), 107–140.</span>
-                    </div>
-                    <a href="fqac095.pdf" class="pdf-link" download>
-                        <span class="pdf-icon">📄</span>
-                        <span class="pdf-label">PDF</span>
-                    </a>
-                </div>
-
-                <div class="paper-item">
-                    <div class="paper-info">
-                        <span class="paper-title">Building Linked Lexicography Applications with LexO-server</span>
-                        <span class="paper-meta">Bellandi, A. (2023)</span>
-                        <span class="paper-pub">Digital Scholarship in the Humanities 38(3), 937-952.</span>
-                    </div>
-                    <a href="22199-Bellandi.pdf" class="pdf-link" download>
-                        <span class="pdf-icon">📄</span>
-                        <span class="pdf-label">PDF</span>
-                    </a>
-                </div>
+                <div class="paper-item"><div class="paper-info"><span class="paper-title">Lexicographic Resources in the Semantic Web: Models, Tools, and Case Studies</span><span class="paper-meta">Bellandi, A. (2025)</span><span class="paper-pub">Umanistica Digitale, 9(21), 107–140.</span></div><a href="docs/papers/fqac095.pdf" class="pdf-link" download><span class="pdf-icon">📄</span><span class="pdf-label">PDF</span></a></div>
+                <div class="paper-item"><div class="paper-info"><span class="paper-title">Building Linked Lexicography Applications with LexO-server</span><span class="paper-meta">Bellandi, A. (2023)</span><span class="paper-pub">Digital Scholarship in the Humanities 38(3), 937–952.</span></div><a href="docs/papers/22199-Bellandi.pdf" class="pdf-link" download><span class="pdf-icon">📄</span><span class="pdf-label">PDF</span></a></div>
             </div>
         </section>
-
     </main>
 
     <footer>
         <div class="footer-content">
-            <div class="footer-logo-left">
-                <a href="https://www.ilc.cnr.it/klab/" target="_blank">
-                    <img src="logoILC.png" class="footer-logo-ilc">
-                </a>
-            </div>
-            <div class="footer-copyright">
-                &copy; 2026 LexO-server Suite. All rights reserved.
-            </div>
-            <div class="footer-logo-right">
-                <a href="https://www.clarin-it.it/it" target="_blank">
-                    <img src="logoKLAB.png" class="footer-logo-clarin">
-                </a>
-            </div>
+            <div class="footer-logo-left"><a href="https://www.ilc.cnr.it/klab/" target="_blank" rel="noopener noreferrer"><img src="assets/images/logoILC.png" class="footer-logo-ilc" alt="CNR-ILC"></a></div>
+            <div class="footer-copyright">&copy; 2026 LexO-server Suite. All rights reserved.</div>
+            <div class="footer-logo-right"><a href="https://www.clarin-it.it/it" target="_blank" rel="noopener noreferrer"><img src="assets/images/logoKLAB.png" class="footer-logo-clarin" alt="KLAB"></a></div>
         </div>
     </footer>
-
-    <script>
-        $(document).ready(function() {
-            $('#services-trigger').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $('.dropdown-menu').toggle();
-            });
-            $(document).on('click', function() { $('.dropdown-menu').hide(); });
-        });
-
-        function navigate(sectionId) {
-            $('section').removeClass('active');
-            $('#' + sectionId).addClass('active');
-            $('main').scrollTop(0);
-        }
-    </script>
 </body>
 </html>
