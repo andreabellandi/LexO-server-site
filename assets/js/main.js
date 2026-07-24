@@ -45,6 +45,22 @@ corpus: &lt;https://lexo.ilc.cnr.it/corpora/corpus-001&gt;
 ---</code></pre>
     </div>
 
+    <div class="frontmatter-panel">
+        <div class="frontmatter-copy">
+            <span class="api-eyebrow">Document structure</span>
+            <h3>Structured CommonMark</h3>
+            <p>CommonMark files can also encode the internal hierarchy of a document. Markdown heading levels are interpreted as structural units: a level-one heading can introduce a chapter, a level-two heading can introduce a section, and lower levels can represent further subdivisions.</p>
+            <p>A stable identifier may be placed in square brackets at the beginning of a heading. This allows each structural unit to be referenced unambiguously in the generated NIF representation. Paragraphs following a heading belong to that unit until the next heading at the same or a higher level.</p>
+        </div>
+        <pre class="frontmatter-code"><code># [id=cap1] Chapter One
+
+First paragraph.
+
+## [id=sec1] Section
+
+Text.</code></pre>
+    </div>
+
     <div class="api-service-group">
         <div class="api-section-heading">
             <div>
