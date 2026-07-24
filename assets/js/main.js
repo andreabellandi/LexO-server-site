@@ -23,6 +23,65 @@ $(document).ready(function () {
         }
     });
 
+    setupCorpusApi();
+    setupProjectIcons();
+});
+
+function setupCorpusApi() {
+    if (!$('link[href="assets/css/corpus-api.css"]').length) {
+        $('<link>', {
+            rel: 'stylesheet',
+            href: 'assets/css/corpus-api.css'
+        }).appendTo('head');
+    }
+
+    const $ecdMenuItem = $('.dropdown-menu a')
+        .filter(function () {
+            return $(this).text().trim() === 'ECD API';
+        })
+        .closest('li');
+
+    if (!$('.dropdown-menu a').filter(function () {
+        return $(this).text().trim() === 'Corpus API';
+    }).length) {
+        $('<li><a onclick="navigate(\'api-corpus\')">Corpus API</a></li>')
+            .insertBefore($ecdMenuItem);
+    }
+
+    if (!$('#api-corpus').length) {
+        const $section = $('<section>', {
+            id: 'api-corpus',
+            class: 'corpus-api',
+            html: '<div class="content-block"><p>Loading Corpus API documentation…</p></div>'
+        });
+
+        const $ecdSection = $('#api-ecd');
+        if ($ecdSection.length) {
+            $section.insertBefore($ecdSection);
+        } else {
+            $('main').append($section);
+        }
+
+        fetch('assets/content/corpus-api.html')
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(function (html) {
+                $section.html(html);
+            })
+            .catch(function () {
+                $section.html(
+                    '<div class="content-block"><h2>Corpus and Text Services Documentation</h2>' +
+                    '<p>The documentation could not be loaded. Serve the website through a local HTTP server rather than opening index.html directly.</p></div>'
+                );
+            });
+    }
+}
+
+function setupProjectIcons() {
     const projectIcons = [
         { file: 'vocabo-icon.png', alt: 'VocaBO project icon' },
         { file: 'ownw-icon.jpg', alt: 'OWNW project icon' },
@@ -52,7 +111,7 @@ $(document).ready(function () {
 
         $(this).find('.project-title-col').css('align-self', 'center');
     });
-});
+}
 
 function navigate(sectionId) {
     $('section').removeClass('active');
