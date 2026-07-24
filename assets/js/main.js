@@ -22,6 +22,13 @@ $(document).ready(function () {
             $(this).trigger('click');
         }
     });
+
+    const $vocaboProject = $('#projects .project-row').first();
+    $vocaboProject.find('.project-icon').attr({
+        src: 'assets/images/vocabo-icon.png',
+        alt: 'VocaBO project icon'
+    });
+    $vocaboProject.find('.project-title-col').css('align-self', 'center');
 });
 
 function navigate(sectionId) {
