@@ -37,9 +37,6 @@ author:
   - Mario Rossi
   - Giulio Bianchi
 date: 2026-07-24
-language:
-  - it
-  - &lt;https://id.loc.gov/vocabulary/iso639-2/ita&gt;
 format: text/plain
 corpus: &lt;https://lexo.ilc.cnr.it/corpora/corpus-001&gt;
 ---</code></pre>
