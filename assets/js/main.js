@@ -58,6 +58,52 @@ First paragraph.
 Text.</code></pre>
     </div>
 
+    <div class="frontmatter-panel">
+        <div class="frontmatter-copy">
+            <span class="api-eyebrow">JSON BULK IMPORT</span>
+            <h3>Text and attestations</h3>
+            <p>A fixed-schema JSON file can import plain text, document metadata and one or more FRAC attestations in a single operation. JSON documents are uploaded through <code>POST /texts/bulk</code>, using a multipart <code>file</code> field and a shared, required ISO 639 <code>language</code> field.</p>
+            <p>The canonical text is read from <code>text.content</code> and converted to NIF as plain text. Each attestation identifies an existing OntoLex entity, its exact RDF type, the selected textual value and its Unicode code-point offsets. The value must match the substring between <code>start_char</code> and <code>end_char</code>.</p>
+            <p>Attestations may also include custom RDF metadata. Each metadata property contains one or more values, represented as IRIs, plain literals, language-tagged literals or typed literals. In the example, a decimal confidence value is associated with the imported attestation.</p>
+            <p>Lexical entries, forms and senses are resolved in the lexical graph associated with the uploaded language, while lexical concepts are resolved in the fixed lexical-concept graph. Invalid individual attestations are reported as unsaved without removing the imported text or other valid attestations.</p>
+            <p><strong>Technical note.</strong> The language is not declared inside the JSON document. It must be supplied separately as the multipart <code>language</code> field. The observable IRI must identify an existing lexical entity of the declared RDF type.</p>
+        </div>
+        <pre class="frontmatter-code"><code>{
+  "metadata": {
+    "id": "doc-001",
+    "title": "Testo annotato",
+    "author": "Mario Rossi"
+  },
+  "text": {
+    "type": "txt",
+    "content": "LexO annota parole."
+  },
+  "attestations": [
+    {
+      "id": "ann-001",
+      "observable": "https://lexo.ilc.cnr.it#LexO_parola",
+      "type": "http://www.w3.org/ns/lemon/ontolex#LexicalEntry",
+      "value": "parole",
+      "gloss": "parola",
+      "start_char": 12,
+      "end_char": 18,
+      "metadata": [
+        {
+          "property": "http://www.lexinfo.net/ontology/3.0/lexinfo#confidence",
+          "values": [
+            {
+              "value": "0.95",
+              "type": "literal",
+              "datatype": "http://www.w3.org/2001/XMLSchema#decimal"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}</code></pre>
+    </div>
+
     <div class="api-service-group">
         <div class="api-section-heading">
             <div>
