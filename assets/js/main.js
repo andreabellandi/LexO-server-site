@@ -283,12 +283,32 @@ function setupCorpusApi() {
         }).appendTo('head');
     }
 
-    $('.dropdown-menu').html(`
-        <li><a onclick="navigate('api-lexicon')">Lexicon API</a></li>
-        <li><a onclick="navigate('api-dictionary')">Dictionary API</a></li>
-        <li><a onclick="navigate('api-ecd')">Explanatory Combinatorial Dictionary API</a></li>
-        <li><a onclick="navigate('api-corpus')">Corpus API</a></li>
-    `);
+    const $servicesMenu = $('.dropdown-menu');
+    $servicesMenu
+        .html(`
+            <li><a onclick="navigate('api-lexicon')">Lexicon API</a></li>
+            <li><a onclick="navigate('api-attestation')">Attestation API</a></li>
+            <li><a onclick="navigate('api-dictionary')">Dictionary API</a></li>
+            <li><a onclick="navigate('api-ecd')">Explanatory Combinatorial Dictionary API</a></li>
+            <li><a onclick="navigate('api-corpus')">Corpus API</a></li>
+        `)
+        .css('min-width', '400px');
+
+    $servicesMenu.find('a').css('white-space', 'nowrap');
+
+    if (!$('#api-attestation').length) {
+        const $attestationSection = $('<section>', {
+            id: 'api-attestation',
+            html: '<div class="content-block"><h2>Attestation API</h2><p>Attestation service documentation will be added here.</p></div>'
+        });
+
+        const $lexiconSection = $('#api-lexicon');
+        if ($lexiconSection.length) {
+            $attestationSection.insertAfter($lexiconSection);
+        } else {
+            $('main').append($attestationSection);
+        }
+    }
 
     if (!$('#api-corpus').length) {
         const $section = $('<section>', {
