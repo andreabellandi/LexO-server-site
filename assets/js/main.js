@@ -61,26 +61,39 @@ Text.</code></pre>
     <div class="api-service-group">
         <div class="api-section-heading">
             <div>
-                <span class="api-eyebrow">Single-document lifecycle</span>
+                <span class="api-eyebrow">Document lifecycle</span>
                 <h3>Text management</h3>
             </div>
-            <span class="service-count">11 endpoints</span>
+            <span class="service-count">3 endpoints</span>
         </div>
         <div class="api-table-wrap">
             <table class="api-table">
-                <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts</code></td><td>Returns the catalogue of texts stored in LexOTexts, including each text's name, size, sentence and token counts, metadata, attestations, and annotations. The optional <code>corpusId</code> query parameter restricts the result to texts belonging to a specific corpus.</td></tr>
-                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/upload</code></td><td>Uploads a single <code>.txt</code>, <code>.md</code>, or <code>.markdown</code> file together with a required ISO 639 language code and, optionally, an associated CoNLL-U file. The service temporarily stores the original artifacts and returns a <code>fileId</code>; conversion must be started separately.</td></tr>
-                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/{fileId}/convert</code><code class="endpoint-code endpoint-variant">?corpusId={corpusId}</code></td><td>Asynchronously converts a previously uploaded text. It parses TXT or CommonMark, applies optional CoNLL-U segmentation, generates the NIF model, and may add the document to the corpus identified by the optional <code>corpusId</code> parameter.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/status</code></td><td>Returns the state of the asynchronous conversion job: <code>PENDING</code>, <code>RUNNING</code>, <code>COMPLETED</code>, <code>FAILED</code>, or <code>CANCELLED</code>. The response includes progress, a status message, the result, and any validation issues.</td></tr>
-                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/{fileId}/cancel</code></td><td>Requests cancellation of the asynchronous conversion associated with the text. The request body is optional; when a job type is specified, it must be <code>CONVERT</code>.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}</code></td><td>Returns the record persisted after conversion, including the document URI, corpus membership, original file names, segmentation method, structural counts, metadata, and warnings.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/nif</code></td><td>Downloads the document's NIF named graph serialized as Turtle. The graph includes canonical text, document structure, linguistic segmentation, metadata, and the link to an optional corpus.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/original</code></td><td>Returns the TXT or CommonMark file originally uploaded. The original file remains available after a successful conversion.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/canonical</code></td><td>Returns the normalized text used as <code>nif:isString</code>. This is the reference representation against which the Unicode offsets of segments, attestations, and annotations are calculated.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/conllu</code></td><td>Returns the CoNLL-U file associated with the text when one was supplied during single-document upload. If no CoNLL-U artifact is available, the service responds with <code>404 Not Found</code>.</td></tr>
-                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/texts/{fileId}</code></td><td>Deletes the document's NIF graph and record, its persisted original artifacts, and any related jobs or temporary uploads. It also detaches the document from its corpus and removes the corresponding attestation and annotation named graphs.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts</code></td><td>Text catalogue</td><td>Returns the texts available in <code>LexOTexts</code>, including name, size, sentence and token counts, metadata, attestations, and annotations. The optional <code>corpusId</code> parameter restricts the result to texts belonging to a specific corpus.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}</code></td><td>Text details</td><td>Returns the persisted record of a converted text, including its URI, corpus, segmentation method, associated files, named graph, dates, counts, metadata, and warnings.</td></tr>
+                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/texts/{fileId}</code></td><td>Delete text</td><td>Deletes the document record and NIF graph, persisted files, corpus membership, attestations, and annotations. It also removes references to those attestations from other graphs and recalculates the affected frequencies.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Single-document workflow</span>
+                <h3>Single import and NIF conversion</h3>
+            </div>
+            <span class="service-count">4 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/upload</code></td><td>Upload text</td><td>Uploads a TXT or CommonMark file and, optionally, a CoNLL-U file. The multipart <code>language</code> field is required and validated against the ISO 639 list. The service returns a new <code>fileId</code>.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/{fileId}/convert</code><code class="endpoint-code endpoint-variant">?corpusId={corpusId}</code></td><td>Start NIF conversion</td><td>Starts asynchronous conversion of the uploaded text. The optional <code>corpusId</code> parameter adds the resulting document to the specified corpus.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/status</code></td><td>Conversion status</td><td>Returns the current state of asynchronous jobs associated with the text, including progress, completion, failure, or cancellation information.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/{fileId}/cancel</code></td><td>Cancel conversion</td><td>Requests interruption of the asynchronous conversion. The body is optional; when it specifies <code>type</code>, the only accepted value is <code>CONVERT</code>.</td></tr>
                 </tbody>
             </table>
         </div>
@@ -96,10 +109,68 @@ Text.</code></pre>
         </div>
         <div class="api-table-wrap">
             <table class="api-table">
-                <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/bulk</code></td><td>Accepts multiple <code>.txt</code>, <code>.md</code>, or <code>.markdown</code> files and one required ISO 639 language code shared by all documents. The optional <code>corpusId</code> is also shared by the complete batch. The service validates the entire request and then automatically starts an independent conversion for every document. CoNLL-U is not supported in bulk mode: the presence of a CoNLL-U part or file extension rejects the whole request. After acceptance, however, the failure of one document does not roll back documents that were converted successfully.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/bulk/{bulkId}/status</code></td><td>Returns the aggregate status of the bulk operation and the status of every individual document, including its <code>fileId</code>, progress, and errors. Final aggregate states are <code>COMPLETED</code>, <code>FAILED</code>, <code>CANCELLED</code>, or <code>PARTIALLY_COMPLETED</code>.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/bulk</code></td><td>Bulk import and conversion</td><td>Uploads and starts asynchronous conversion of multiple TXT, CommonMark, or JSON files using one shared ISO language code. CoNLL-U is not supported. <code>corpusId</code> applies only to textual files; JSON files use <code>metadata.corpus</code> and may contain attestations. Returns <code>HTTP 202</code> with a <code>bulkId</code> and independent <code>fileId</code> values.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/bulk/{bulkId}/status</code></td><td>Bulk import status</td><td>Returns the aggregate status, counters, and outcome of each document in the bulk operation, including independent failures and JSON attestations that could not be saved.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Multiple documents</span>
+                <h3>Bulk deletion</h3>
+            </div>
+            <span class="service-count">2 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/texts/bulk</code></td><td>Asynchronous bulk deletion</td><td>Validates a non-empty JSON list of unique <code>fileIds</code> and starts a job that independently applies the same complete deletion procedure used for a single text to every item. Returns <code>HTTP 202</code> and a <code>bulkId</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/deletions/{bulkId}/status</code></td><td>Bulk deletion status</td><td>Returns status, counters, and the ordered outcome for each text: deleted, not found, or failed. An error affecting one item does not prevent subsequent items from being processed.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Corpus lifecycle</span>
+                <h3>Corpus management</h3>
+            </div>
+            <span class="service-count">3 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/corpora</code></td><td>Create corpus</td><td>Creates an empty NIF corpus from a single TXT file containing only front matter with supported metadata. Returns the corpus record and the new <code>corpusId</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}</code></td><td>Corpus details</td><td>Returns the corpus record, metadata, and the current list of documents belonging to the corpus.</td></tr>
+                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}</code></td><td>Delete corpus</td><td>Deletes the corpus NIF graph and persisted descriptor. Member texts are not deleted: they remain available and are detached from the corpus.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Frequency metadata</span>
+                <h3>Corpus frequency</h3>
+            </div>
+            <span class="service-count">2 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method put">PUT</span></td><td><code class="endpoint-code">/texts/{fileId}/total</code></td><td>Text frequency total</td><td>Creates or replaces, in the document graph, the total for one supported unit: <code>tokens</code>, <code>types</code>, <code>lemmas</code>, or <code>sentences</code>. The value must be a non-negative integer; totals for all other units remain unchanged.</td></tr>
+                    <tr><td><span class="method put">PUT</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}/total</code></td><td>Corpus frequency total</td><td>Creates or replaces, in the corpus graph, the total for the specified frequency unit while preserving totals associated with the other units.</td></tr>
                 </tbody>
             </table>
         </div>
@@ -108,20 +179,21 @@ Text.</code></pre>
     <div class="api-service-group corpus-services-group">
         <div class="api-section-heading">
             <div>
-                <span class="api-eyebrow">Corpus lifecycle</span>
-                <h3>Corpus management</h3>
+                <span class="api-eyebrow">Stored representations</span>
+                <h3>Text artifact downloads</h3>
             </div>
-            <span class="service-count">5 endpoints</span>
+            <span class="service-count">6 endpoints</span>
         </div>
         <div class="api-table-wrap">
             <table class="api-table">
-                <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/texts/corpora</code></td><td>Creates an empty NIF corpus from a <code>.txt</code> file containing only front matter and supported metadata. The descriptor must not contain document text.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}</code></td><td>Returns the corpus URI, metadata, descriptor file, and the current list of documents belonging to the corpus.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}/nif</code></td><td>Downloads the corpus NIF named graph in Turtle, including its metadata and the <code>dcterms:hasPart</code> links to member texts.</td></tr>
-                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}/original</code></td><td>Returns the original TXT descriptor used to create the corpus and define its metadata.</td></tr>
-                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}</code></td><td>Deletes the corpus NIF graph, record, and descriptor. Member texts are not deleted; they are only detached from the corpus.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/nif</code></td><td>Download text NIF</td><td>Returns the document's NIF named graph serialized as Turtle.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/original</code></td><td>Download original</td><td>Returns the TXT, CommonMark, or JSON file originally uploaded.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/canonical</code></td><td>Download canonical text</td><td>Returns the normalized plain text used as <code>nif:isString</code> and as the reference representation for Unicode offsets.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/{fileId}/conllu</code></td><td>Download CoNLL-U</td><td>Returns the CoNLL-U file associated with the text, when available.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}/nif</code></td><td>Download corpus NIF</td><td>Returns the corpus NIF named graph serialized as Turtle.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/texts/corpora/{corpusId}/original</code></td><td>Download corpus descriptor</td><td>Returns the original TXT file containing the metadata used to create the corpus.</td></tr>
                 </tbody>
             </table>
         </div>
