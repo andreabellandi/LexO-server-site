@@ -246,6 +246,102 @@ Text.</code></pre>
     </div>
 </div>`;
 
+const ATTESTATION_API_HTML = `
+<div class="content-block">
+    <div class="corpus-api-header">
+        <span class="api-eyebrow">FRAC attestation services</span>
+        <h2>Attestation Services Documentation</h2>
+        <p class="api-lead">These services create, retrieve, update, and delete FRAC attestations linked to NIF textual loci while keeping observable frequencies synchronized with the underlying textual evidence.</p>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Attestation lifecycle</span>
+                <h3>Creation</h3>
+            </div>
+            <span class="service-count">2 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/attestations</code></td><td>Batch creation by observable</td><td>Creates multiple FRAC attestations for the same observable at one or more positions in a text. The request requires <code>observable</code> and <code>corpus</code>, and optionally accepts <code>external</code> and <code>author</code>. The body is an array of occurrences containing <code>value</code>, <code>start</code>, and <code>end</code>. The complete request is validated atomically, NIF loci are created or reused, and the observable's frequency in the text is updated.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/attestations/by-locus</code></td><td>Batch creation by locus</td><td>Creates multiple attestations for different observables on the same textual interval. The request requires <code>corpus</code>, and optionally accepts <code>external</code> and <code>author</code>. The body contains <code>value</code>, <code>start</code>, <code>end</code>, and an <code>observables</code> list; each observable may carry its own RDF metadata. A single shared NIF locus is created or reused, and the frequencies of all affected observables are updated.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Search and inspection</span>
+                <h3>Retrieval</h3>
+            </div>
+            <span class="service-count">2 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/attestations/{fileId}</code></td><td>Attestations for a text</td><td>Returns a paginated list of attestations for the text identified by <code>fileId</code>, including the observable with its label and RDF types, frequency in the text, NIF locus, selected value, offsets, language, author, dates, and metadata. Optional query filters are <code>observable</code>, <code>observableType</code>, <code>author</code>, <code>limit</code>, and <code>offset</code>. The request may also include a JSON filter with nested <code>AND</code>/<code>OR</code> conditions over author, text metadata, and observable type. The default <code>limit</code> is 50.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/attestations/by-observable</code></td><td>Attestations for an observable</td><td>Searches all document graphs for attestations of the IRI supplied through the required <code>observable</code> parameter. It returns the same paginated representation as the text-specific service, distinguishing the document, locus, and frequency associated with each attestation. It accepts <code>limit</code>, <code>offset</code>, and the shared optional JSON filter.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Attestation maintenance</span>
+                <h3>Update</h3>
+            </div>
+            <span class="service-count">2 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">PATCH</span></td><td><code class="endpoint-code">/attestations/{fileId}/locus</code></td><td>Update locus</td><td>Moves a single attestation to a new interval in the text. The body specifies <code>attestation</code>, <code>start</code>, <code>end</code>, and optionally <code>updateGloss</code>, which defaults to <code>true</code>. Offsets are interpreted as Unicode code points and the selected value is recalculated from the canonical text. The service creates or reuses the destination locus and preserves previous loci that are system-provided or still shared.</td></tr>
+                    <tr><td><span class="method post">PATCH</span></td><td><code class="endpoint-code">/attestations/{fileId}/observable</code></td><td>Replace observable</td><td>Atomically replaces the observable associated with one or more attestations in the text. The body contains the new <code>observable</code> and a non-empty <code>attestations</code> list. The entire batch is validated before any write is performed, and the frequencies of both the new observable and the previous observables are recalculated.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Attestation lifecycle</span>
+                <h3>Deletion</h3>
+            </div>
+            <span class="service-count">2 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/attestations/{fileId}/by-observable</code></td><td>Delete by observable</td><td>Deletes some or all attestations of a specific observable from the text. The body contains <code>observable</code> and exactly one selection mode: a non-empty <code>attestations</code> list or <code>all: true</code>. The operation is atomic, updates the observable's frequency, and removes only orphaned loci generated by LexO; shared or pre-existing loci are preserved.</td></tr>
+                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/attestations/{fileId}/by-locus</code></td><td>Delete by locus</td><td>Deletes some or all attestations associated with a specific NIF locus in the text. The body contains <code>locus</code> and exactly one selection mode: an <code>attestations</code> list or <code>all: true</code>. Frequencies are updated for every affected observable, and the locus is removed only when it was generated by the service and has become orphaned.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="frontmatter-panel" style="grid-template-columns: 1fr;">
+        <div class="frontmatter-copy">
+            <span class="api-eyebrow">Common rules</span>
+            <h3>Attestation semantics</h3>
+            <p><code>{fileId}</code> selects the attestation named graph associated with a single text.</p>
+            <p><code>start</code> is inclusive and <code>end</code> is exclusive. Both are Unicode code-point offsets calculated against the canonical <code>nif:isString</code> value.</p>
+            <p>Supported observables are lexical entries, forms, lexical senses, and lexical concepts.</p>
+            <p>Creation, update, and deletion operations automatically maintain the corresponding <code>frac:Frequency</code> resources.</p>
+        </div>
+    </div>
+</div>`;
+
 $(document).ready(function () {
     const $trigger = $('#services-trigger');
     const $menu = $('.dropdown-menu');
@@ -299,7 +395,8 @@ function setupCorpusApi() {
     if (!$('#api-attestation').length) {
         const $attestationSection = $('<section>', {
             id: 'api-attestation',
-            html: '<div class="content-block"><h2>Attestation API</h2><p>Attestation service documentation will be added here.</p></div>'
+            class: 'corpus-api',
+            html: ATTESTATION_API_HTML
         });
 
         const $lexiconSection = $('#api-lexicon');
