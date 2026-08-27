@@ -7,6 +7,16 @@
     --api-muted: #5b6472;
 }
 
+/* Services dropdown: size to the longest label rather than a fixed width. */
+.dropdown-menu {
+    width: max-content;
+    min-width: 0 !important;
+}
+
+.dropdown-menu li a {
+    white-space: nowrap;
+}
+
 .corpus-api .content-block {
     max-width: 1180px;
     margin-right: auto;
