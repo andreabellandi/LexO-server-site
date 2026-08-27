@@ -241,6 +241,10 @@ th {
 }
 
 /* Papers */
+#papers h2 {
+    margin-bottom: 30px;
+}
+
 .paper-item {
     display: flex;
     align-items: center;
