@@ -109,6 +109,133 @@ docker compose down</code></pre>
             </div>
         </div>`;
 
+    const MANUAL_INSTALLATION_HTML = `
+        <div class="install-guide">
+            <div class="install-header">
+                <span class="install-eyebrow">LexO-server deployment</span>
+                <h2>Manual Installation</h2>
+                <p class="install-lead">Install GraphDB, Tomcat, and LexO-server as separate local components, without Docker.</p>
+            </div>
+
+            <div class="install-note">
+                Commands below are for macOS/Linux. On Windows, use the corresponding <code>.cmd</code> or <code>.bat</code> scripts where indicated.
+            </div>
+
+            <div class="install-section" style="margin-top:0;padding-top:0;border-top:0;">
+                <span class="install-eyebrow">01 · Prerequisites</span>
+                <h3>Install the prerequisites</h3>
+                <div class="install-requirements">
+                    <span class="install-requirement">JDK 17 recommended</span>
+                    <span class="install-requirement">Apache Maven 3.8+</span>
+                    <span class="install-requirement">GraphDB Free 10.8.x</span>
+                    <span class="install-requirement">Apache Tomcat 9</span>
+                </div>
+                <p>GraphDB 10.8 requires Java 11 or later. Do not use Tomcat 10: LexO-server currently uses the <code>javax.*</code> APIs.</p>
+                <div class="install-links">
+                    <div class="install-link-card"><span>Maven</span><a href="https://maven.apache.org/install" target="_blank" rel="noopener noreferrer">Installation guide</a></div>
+                    <div class="install-link-card"><span>Apache Tomcat 9</span><a href="https://tomcat.apache.org/download-90.cgi" target="_blank" rel="noopener noreferrer">Download Tomcat 9</a></div>
+                </div>
+                <p>Verify Java and Maven:</p>
+                <pre class="install-command"><code>java -version
+mvn -version</code></pre>
+            </div>
+
+            <div class="install-section">
+                <span class="install-eyebrow">02 · GraphDB</span>
+                <h3>Start GraphDB</h3>
+                <p>Download and unpack GraphDB Free, then run it in the foreground:</p>
+                <pre class="install-command"><code>export GRAPHDB_DIST=/absolute/path/to/graphdb-10.8.x
+"$GRAPHDB_DIST/bin/graphdb"</code></pre>
+                <p>On Windows run <code>bin\\graphdb.cmd</code>. Open GraphDB to verify that the service is ready.</p>
+                <div class="install-links">
+                    <div class="install-link-card"><span>GraphDB</span><a href="http://localhost:7200/" target="_blank" rel="noopener noreferrer">localhost:7200</a></div>
+                    <div class="install-link-card"><span>Documentation</span><a href="https://graphdb.ontotext.com/documentation/10.8/pdf/GraphDB.pdf" target="_blank" rel="noopener noreferrer">GraphDB 10.8 documentation</a></div>
+                </div>
+                <div class="install-note">
+                    Do not create <code>LexOLexica</code> or <code>LexOTexts</code> manually: LexO-server's bootstrap creates and configures both repositories.
+                </div>
+                <p>Stop a foreground GraphDB process with <code>Ctrl+C</code>.</p>
+            </div>
+
+            <div class="install-section">
+                <span class="install-eyebrow">03 · Runtime configuration</span>
+                <h3>Create the LexO runtime configuration</h3>
+                <p>Create writable directories for configuration, application data, and logs:</p>
+                <pre class="install-command"><code>export LEXO_RUNTIME_DIR=/absolute/path/to/lexo-runtime
+mkdir -p "$LEXO_RUNTIME_DIR/conf" "$LEXO_RUNTIME_DIR/data/texts" \\
+  "$LEXO_RUNTIME_DIR/data/legacy" "$LEXO_RUNTIME_DIR/logs"</code></pre>
+                <p>Create <code>$LEXO_RUNTIME_DIR/conf/lexo-server.properties</code> with:</p>
+                <pre class="install-command"><code>GraphDb.url=http://localhost:7200
+GraphDb.repository=LexOLexica
+TextGraphDb.url=http://localhost:7200
+TextGraphDb.repository=LexOTexts
+lexo.text.storage.dir=/absolute/path/to/lexo-runtime/data/texts
+lexo.legacy.storage.dir=/absolute/path/to/lexo-runtime/data/legacy
+Bootstrap.enabled=true
+Bootstrap.required=true</code></pre>
+                <div class="install-note">Replace every example path with an absolute path on the local machine.</div>
+            </div>
+
+            <div class="install-section">
+                <span class="install-eyebrow">04 · Build</span>
+                <h3>Build the WAR</h3>
+                <p>From the LexO-server repository:</p>
+                <pre class="install-command"><code>mvn clean package</code></pre>
+                <p>The deployable file is <code>target/LexO-server.war</code>. This step can be skipped when a prebuilt WAR is supplied.</p>
+            </div>
+
+            <div class="install-section">
+                <span class="install-eyebrow">05 · Tomcat</span>
+                <h3>Configure Tomcat and deploy LexO-server</h3>
+                <p>Set the Tomcat paths. For a simple single-instance installation, <code>CATALINA_BASE</code> and <code>CATALINA_HOME</code> can be the same directory:</p>
+                <pre class="install-command"><code>export CATALINA_HOME=/absolute/path/to/apache-tomcat-9.x
+export CATALINA_BASE="$CATALINA_HOME"</code></pre>
+                <p>Create <code>$CATALINA_BASE/bin/setenv.sh</code> containing:</p>
+                <pre class="install-command"><code>export CATALINA_OPTS="$CATALINA_OPTS -Dlexo.config.file=/absolute/path/to/lexo-runtime/conf/lexo-server.properties -Dlexo.log.dir=/absolute/path/to/lexo-runtime/logs -Dfile.encoding=UTF-8"</code></pre>
+                <p>Make it executable, copy the WAR, and start Tomcat:</p>
+                <pre class="install-command"><code>chmod +x "$CATALINA_BASE/bin/setenv.sh"
+cp target/LexO-server.war "$CATALINA_BASE/webapps/LexO-server.war"
+"$CATALINA_HOME/bin/startup.sh"</code></pre>
+                <p>On Windows create <code>bin\\setenv.bat</code>, set the same JVM properties with <code>CATALINA_OPTS</code>, copy the WAR into <code>webapps</code>, and run <code>bin\\startup.bat</code>.</p>
+                <div class="install-note">The first startup may take longer because LexO-server creates the repositories, loads the schemas, and creates the indexes.</div>
+                <p>Check the running services:</p>
+                <div class="install-links">
+                    <div class="install-link-card"><span>LexO / Swagger</span><a href="http://localhost:8080/LexO-server/" target="_blank" rel="noopener noreferrer">localhost:8080/LexO-server/</a></div>
+                    <div class="install-link-card"><span>Readiness</span><a href="http://localhost:8080/LexO-server/service/health/ready" target="_blank" rel="noopener noreferrer">/service/health/ready</a></div>
+                    <div class="install-link-card"><span>GraphDB</span><a href="http://localhost:7200/" target="_blank" rel="noopener noreferrer">localhost:7200</a></div>
+                </div>
+                <p>If startup fails, inspect <code>$CATALINA_BASE/logs/catalina.out</code> and the configured LexO log directory. A successful readiness response has status <code>UP</code>.</p>
+            </div>
+
+            <div class="install-section">
+                <span class="install-eyebrow">06 · Daily operations</span>
+                <h3>Start and stop the installation</h3>
+                <p>Start GraphDB first, then Tomcat. Stop them in the reverse order:</p>
+                <pre class="install-command"><code>"$CATALINA_HOME/bin/shutdown.sh"
+"$CATALINA_HOME/bin/startup.sh"</code></pre>
+                <p>Use <code>shutdown.bat</code> and <code>startup.bat</code> on Windows. Stop GraphDB only after Tomcat has stopped.</p>
+            </div>
+
+            <div class="install-section">
+                <span class="install-eyebrow">07 · Upgrade</span>
+                <h3>Install a new LexO-server WAR</h3>
+                <p>The repositories and application data must remain in their existing locations. Before an update, back up the GraphDB data directory and the LexO runtime data.</p>
+                <ol class="install-process">
+                    <li>Stop Tomcat with <code>shutdown.sh</code> or <code>shutdown.bat</code>.</li>
+                    <li>Save a copy of the current <code>webapps/LexO-server.war</code>.</li>
+                    <li>Copy the new WAR over <code>webapps/LexO-server.war</code>, keeping the same name.</li>
+                    <li>Start Tomcat and wait for bootstrap to finish.</li>
+                    <li>Verify the readiness URL, Swagger, and the logs.</li>
+                </ol>
+                <p>With Tomcat's default deployment settings, the newer WAR replaces the expanded application automatically. If custom deployment settings are used, also move the old <code>webapps/LexO-server</code> expanded directory to a backup location while Tomcat is stopped.</p>
+                <div class="install-note">Do not replace the WAR while requests are being served.</div>
+                <p>To roll back, stop Tomcat, restore the previous WAR, and restart it. Restore the data backup as well if the new version performed incompatible data migrations.</p>
+                <div class="install-links">
+                    <div class="install-link-card"><span>Tomcat documentation</span><a href="https://tomcat.apache.org/tomcat-9.0-doc/deployer-howto.html" target="_blank" rel="noopener noreferrer">Tomcat 9 deployment guide</a></div>
+                </div>
+            </div>
+        </div>`;
+
     function setupInstallationDocs() {
         if (!$('link[href="assets/css/install.css"]').length) {
             $('<link>', {
@@ -140,7 +267,7 @@ docker compose down</code></pre>
         if (!$('#install-manual').length) {
             $('<section>', {
                 id: 'install-manual',
-                html: '<div class="content-block"></div>'
+                html: MANUAL_INSTALLATION_HTML
             }).insertBefore('#papers');
         }
 
@@ -182,7 +309,6 @@ docker compose down</code></pre>
             return SECTIONS_BY_ROUTE[rawHash];
         }
 
-        // Backwards-compatible support for hashes based directly on section IDs.
         const legacySectionId = rawHash.replace(/^\//, '');
         if (ROUTES[legacySectionId]) {
             return legacySectionId;
