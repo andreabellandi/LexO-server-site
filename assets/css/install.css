@@ -119,6 +119,63 @@
     text-align: left;
 }
 
+.github-repo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 100%;
+    margin: 3px 0 5px;
+    padding: 10px 14px;
+    border: 1px solid #dbe2ea;
+    border-radius: 8px;
+    color: var(--inst-blue);
+    background: #fff;
+    box-shadow: 0 5px 16px rgb(15 23 42 / 5%);
+    text-decoration: none;
+    transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+}
+
+.github-repo-chip:hover,
+.github-repo-chip:focus-visible {
+    border-color: var(--inst-red);
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
+
+.github-repo-icon {
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+}
+
+.github-repo-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    line-height: 1.25;
+}
+
+.github-repo-copy strong {
+    color: var(--inst-red);
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.github-repo-copy span {
+    margin-top: 2px;
+    color: #64748b;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+}
+
+.github-repo-arrow {
+    margin-left: 3px;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
 .install-command {
     overflow-x: auto;
     margin: 15px 0 20px;
