@@ -9,39 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
-    <style>
-        #home .hero-section {
-            position: relative;
-        }
-
-        #home .home-clarin-logo {
-            position: absolute;
-            top: 48%;
-            right: 0;
-            width: min(28vw, 340px);
-            max-height: 145px;
-            object-fit: contain;
-            transform: translateY(-50%);
-        }
-
-        @media (max-width: 900px) {
-            #home .home-clarin-logo {
-                width: min(25vw, 240px);
-                max-height: 120px;
-            }
-        }
-
-        @media (max-width: 700px) {
-            #home .home-clarin-logo {
-                position: static;
-                display: block;
-                width: min(78vw, 300px);
-                max-height: none;
-                margin: 24px auto 0;
-                transform: none;
-            }
-        }
-    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/router.js" defer></script>
@@ -100,7 +67,6 @@
             <div class="hero-section">
                 <h2 class="main-title">Welcome to <span class="accent-text">LexO-server Suite</span></h2>
                 <p class="lead-paragraph">A RESTful service infrastructure designed for the collaborative management of linguistic resources modeled according to the <strong>Linked Data</strong> paradigm.</p>
-                <img src="assets/images/clarin-it-home.png" class="home-clarin-logo" alt="CLARIN-IT">
             </div>
             <div class="highlight-box">Enables the creation, editing, and deletion of complex dictionaries and lexicons, modeled as interoperable Knowledge Graphs.</div>
             <div class="features-grid">
