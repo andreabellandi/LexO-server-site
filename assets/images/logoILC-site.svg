@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="942" height="143" viewBox="0 0 942 143">
+  <defs>
+    <filter id="site-palette" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <!-- Map the two institutional ILC blues to the LexO-server palette. -->
+      <feColorMatrix in="SourceGraphic" type="matrix" values="
+        -3.589381 8.534513 -3.945133 0 0
+         3.874336 -5.258407 2.384071 0 0
+         6.026549 -9.663717 4.637168 0 0
+         0 0 0 1 0" result="mapped"/>
+
+      <!-- Select the lighter/cyan KLAB component, while excluding white and dark blue. -->
+      <feColorMatrix in="SourceGraphic" type="matrix" values="
+        0 0 0 0 0
+        0 0 0 0 0
+        0 0 0 0 0
+        -1 0 1 0 0" result="blue-difference"/>
+      <feComponentTransfer in="blue-difference" result="klab-mask">
+        <feFuncA type="discrete" tableValues="0 0 1 1 1"/>
+      </feComponentTransfer>
+      <feFlood flood-color="#7c1d1d" result="klab-red"/>
+      <feComposite in="klab-red" in2="klab-mask" operator="in" result="red-klab"/>
+
+      <feMerge>
+        <feMergeNode in="mapped"/>
+        <feMergeNode in="red-klab"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <image href="logoILC.png" x="0" y="0" width="942" height="143" preserveAspectRatio="xMidYMid meet" filter="url(#site-palette)"/>
+</svg>
