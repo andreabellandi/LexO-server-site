@@ -254,13 +254,21 @@
     text-decoration: underline;
 }
 
-/* Home hero: keep CLARIN-IT in the normal document flow */
+/* Home hero: keep CLARIN-IT fully visible and in normal flow */
+#home,
 #home .hero-section {
-    display: grid;
+    overflow: visible !important;
+}
+
+#home .hero-section {
+    position: relative !important;
+    isolation: isolate;
+    display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(250px, 310px);
     grid-template-rows: auto auto;
     column-gap: clamp(28px, 4vw, 64px);
     align-items: center;
+    min-height: 190px;
 }
 
 #home .main-title {
@@ -274,18 +282,25 @@
 }
 
 #home .home-clarin-logo {
-    position: static !important;
+    position: relative !important;
+    z-index: 20 !important;
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: center;
     justify-self: end;
-    display: block;
+    display: block !important;
     width: 100% !important;
-    max-width: 310px;
+    max-width: 310px !important;
     height: auto !important;
     max-height: none !important;
     margin: 0 !important;
-    object-fit: contain;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    object-fit: contain !important;
+    object-position: center !important;
     transform: none !important;
 }
 
@@ -296,7 +311,7 @@
     }
 
     #home .home-clarin-logo {
-        max-width: 250px;
+        max-width: 250px !important;
     }
 }
 
