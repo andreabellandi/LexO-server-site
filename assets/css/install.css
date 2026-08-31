@@ -254,6 +254,81 @@
     text-decoration: underline;
 }
 
+/* Home hero: keep CLARIN-IT in the normal document flow */
+#home .hero-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 310px);
+    grid-template-rows: auto auto;
+    column-gap: clamp(28px, 4vw, 64px);
+    align-items: center;
+}
+
+#home .main-title {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#home .lead-paragraph {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+#home .home-clarin-logo {
+    position: static !important;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    justify-self: end;
+    display: block;
+    width: 100% !important;
+    max-width: 310px;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    object-fit: contain;
+    transform: none !important;
+}
+
+@media (max-width: 900px) {
+    #home .hero-section {
+        grid-template-columns: minmax(0, 1fr) minmax(200px, 250px);
+        column-gap: 28px;
+    }
+
+    #home .home-clarin-logo {
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 700px) {
+    #home .hero-section {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        row-gap: 0;
+    }
+
+    #home .main-title,
+    #home .lead-paragraph,
+    #home .home-clarin-logo {
+        grid-column: 1;
+    }
+
+    #home .main-title {
+        grid-row: 1;
+    }
+
+    #home .lead-paragraph {
+        grid-row: 2;
+    }
+
+    #home .home-clarin-logo {
+        grid-row: 3;
+        justify-self: center;
+        width: min(78vw, 300px) !important;
+        margin-top: 24px !important;
+    }
+}
+
 @media (max-width: 800px) {
     .install-links {
         grid-template-columns: 1fr;
