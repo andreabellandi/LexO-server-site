@@ -254,12 +254,6 @@
     text-decoration: underline;
 }
 
-/* Footer brand palette */
-.footer-logo-ilc {
-    content: url("../images/logoILC-site.svg");
-    filter: none !important;
-}
-
 @media (max-width: 800px) {
     .install-links {
         grid-template-columns: 1fr;
