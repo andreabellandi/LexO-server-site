@@ -30,6 +30,13 @@
                 <p class="install-lead">Run LexO-server/Tomcat and GraphDB as two coordinated containers using Docker Compose.</p>
             </div>
 
+            <div class="install-section" style="margin-top:0;padding-top:0;border-top:0;">
+                <span class="install-eyebrow">First step</span>
+                <h3>Download LexO-server</h3>
+                <p>First, download or clone the LexO-server project from GitHub: <a href="https://github.com/andreabellandi/LexO-server.git" target="_blank" rel="noopener noreferrer">https://github.com/andreabellandi/LexO-server.git</a>.</p>
+                <pre class="install-command"><code>git clone https://github.com/andreabellandi/LexO-server.git</code></pre>
+            </div>
+
             <div class="install-note">
                 <strong>Important:</strong> do not click <strong>Run</strong> on the LexO image alone in Docker Desktop. Without the GraphDB service and the Compose environment, LexO cannot complete its startup.
             </div>
@@ -94,7 +101,6 @@ docker compose down</code></pre>
                 </ol>
                 <p>To return to the previous version, provided it is compatible with the current data:</p>
                 <pre class="install-command"><code>./docker/update.sh 1.2.1</code></pre>
-                <p class="install-footer-link">For configuration, backup, restore, and image publishing details, see the complete <code>docker.md</code> guide in the LexO-server repository.</p>
             </div>
         </div>`;
 
