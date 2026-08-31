@@ -254,51 +254,7 @@
     text-decoration: underline;
 }
 
-/* CLARIN-IT logo on the home hero */
-#home .hero-section {
-    position: relative;
-    min-height: 210px;
-    padding-right: min(36vw, 430px);
-}
-
-#home .hero-section::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 0;
-    width: min(30vw, 360px);
-    aspect-ratio: 600 / 316;
-    background: url("../images/clarin-it-home.png") center / contain no-repeat;
-    transform: translateY(-54%);
-    pointer-events: none;
-}
-
-@media (max-width: 900px) {
-    #home .hero-section {
-        min-height: 180px;
-        padding-right: min(34vw, 290px);
-    }
-
-    #home .hero-section::after {
-        width: min(29vw, 260px);
-    }
-}
-
-@media (max-width: 700px) {
-    #home .hero-section {
-        min-height: 0;
-        padding-right: 0;
-        padding-bottom: 160px;
-    }
-
-    #home .hero-section::after {
-        top: auto;
-        right: 50%;
-        bottom: 18px;
-        width: min(76vw, 300px);
-        transform: translateX(50%);
-    }
-
+@media (max-width: 800px) {
     .install-links {
         grid-template-columns: 1fr;
     }
