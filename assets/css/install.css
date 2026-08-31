@@ -1,0 +1,204 @@
+/* Installation documentation */
+.install-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 3000;
+    display: none;
+    width: max-content;
+    min-width: 190px;
+    height: auto;
+    border-top: 3px solid var(--inst-red);
+    background: #fff;
+    box-shadow: 0 8px 16px rgb(0 0 0 / 15%);
+    list-style: none;
+}
+
+.install-menu li {
+    height: auto;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+}
+
+.install-menu li:last-child {
+    border-bottom: 0;
+}
+
+.install-menu li a {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 12px 20px;
+    color: var(--inst-blue);
+    white-space: nowrap;
+}
+
+.install-menu li a:hover,
+.install-menu li a:focus-visible {
+    background: #f8fafc;
+}
+
+.install-guide {
+    max-width: 1050px;
+    margin: 0 auto 40px;
+}
+
+.install-header {
+    max-width: 850px;
+    margin-bottom: 30px;
+}
+
+.install-eyebrow {
+    display: inline-block;
+    margin-bottom: 5px;
+    color: var(--inst-red);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+}
+
+.install-header h2 {
+    margin-bottom: 12px;
+    font-size: 2rem;
+}
+
+.install-lead {
+    color: #444;
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.install-note {
+    margin: 25px 0 32px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--inst-red);
+    background: #f8fafc;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.install-note strong {
+    color: var(--inst-blue);
+}
+
+.install-requirements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0 36px;
+}
+
+.install-requirement {
+    padding: 7px 12px;
+    border: 1px solid #dbe2ea;
+    border-radius: 999px;
+    background: #fff;
+    color: #475569;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.install-section {
+    margin-top: 38px;
+    padding-top: 30px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.install-section h3 {
+    margin-bottom: 12px;
+    font-size: 1.45rem;
+}
+
+.install-section p {
+    max-width: 900px;
+    margin-bottom: 14px;
+    color: #4b5563;
+    font-size: 1rem;
+    line-height: 1.65;
+    text-align: left;
+}
+
+.install-command {
+    overflow-x: auto;
+    margin: 15px 0 20px;
+    padding: 18px 20px;
+    border-radius: 8px;
+    color: #e5edf7;
+    background: var(--inst-blue);
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    white-space: pre;
+}
+
+.install-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 18px 0 24px;
+}
+
+.install-link-card {
+    padding: 14px 16px;
+    border: 1px solid #dbe2ea;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.install-link-card span {
+    display: block;
+    margin-bottom: 5px;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
+.install-link-card a {
+    color: var(--inst-red);
+    font-size: 0.91rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+}
+
+.install-link-card a:hover,
+.install-link-card a:focus-visible {
+    text-decoration: underline;
+}
+
+.install-process {
+    margin: 18px 0 20px;
+    padding: 20px 24px 20px 44px;
+    border: 1px solid #dbe2ea;
+    border-radius: 8px;
+    background: #fff;
+    color: #4b5563;
+}
+
+.install-process li {
+    margin: 7px 0;
+    padding-left: 4px;
+    line-height: 1.5;
+}
+
+.install-footer-link {
+    display: inline-block;
+    margin-top: 5px;
+    color: var(--inst-red);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.install-footer-link:hover,
+.install-footer-link:focus-visible {
+    text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+    .install-links {
+        grid-template-columns: 1fr;
+    }
+}
