@@ -254,69 +254,7 @@
     text-decoration: underline;
 }
 
-/* Header branding */
-header {
-    position: relative;
-}
-
-.brand-container {
-    padding-left: 112px;
-}
-
-.brand-container > img {
-    display: none;
-}
-
-header .logo-svg {
-    position: absolute;
-    left: 5%;
-    width: 92px;
-    height: 76px;
-}
-
-header::after {
-    content: "";
-    display: block;
-    flex: 0 0 auto;
-    width: 300px;
-    height: 100px;
-    margin-left: auto;
-    background: url("../images/clarin-it-header.png") center right / contain no-repeat;
-}
-
-@media (max-width: 1000px) {
-    .brand-container {
-        padding-left: 92px;
-    }
-
-    header .logo-svg {
-        width: 76px;
-        height: 64px;
-    }
-
-    header::after {
-        width: 235px;
-        height: 86px;
-    }
-}
-
-@media (max-width: 700px) {
-    .brand-container {
-        gap: 12px;
-        padding-left: 72px;
-    }
-
-    header .logo-svg {
-        left: 5%;
-        width: 58px;
-        height: 52px;
-    }
-
-    header::after {
-        width: 155px;
-        height: 72px;
-    }
-
+@media (max-width: 800px) {
     .install-links {
         grid-template-columns: 1fr;
     }
