@@ -251,7 +251,7 @@ const ATTESTATION_API_HTML = `
     <div class="corpus-api-header">
         <span class="api-eyebrow">FRAC attestation services</span>
         <h2>Attestation Services Documentation</h2>
-        <p class="api-lead">These services create, retrieve, update, and delete FRAC attestations linked to NIF textual loci while keeping observable frequencies synchronized with the underlying textual evidence.</p>
+        <p class="api-lead">These services create, retrieve, export, update, and delete FRAC attestations linked to NIF textual loci while keeping observable frequencies synchronized with the underlying textual evidence.</p>
     </div>
 
     <div class="api-service-group">
@@ -287,6 +287,24 @@ const ATTESTATION_API_HTML = `
                 <tbody>
                     <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/attestations/{fileId}</code></td><td>Attestations for a text</td><td>Returns a paginated list of attestations for the text identified by <code>fileId</code>, including the observable with its label and RDF types, frequency in the text, NIF locus, selected value, offsets, language, author, dates, and metadata. Optional query filters are <code>observable</code>, <code>observableType</code>, <code>author</code>, <code>limit</code>, and <code>offset</code>. The request may also include a JSON filter with nested <code>AND</code>/<code>OR</code> conditions over author, text metadata, and observable type. The default <code>limit</code> is 50.</td></tr>
                     <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/attestations/by-observable</code></td><td>Attestations for an observable</td><td>Searches all document graphs for attestations of the IRI supplied through the required <code>observable</code> parameter. It returns the same paginated representation as the text-specific service, distinguishing the document, locus, and frequency associated with each attestation. It accepts <code>limit</code>, <code>offset</code>, and the shared optional JSON filter.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Interoperability and exchange</span>
+                <h3>Export</h3>
+            </div>
+            <span class="service-count">1 endpoint</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/attestations/export/web-annotation</code></td><td>Web Annotation JSON-LD export</td><td>Exports FRAC attestations as W3C Web Annotation annotations in JSON-LD, returning the <code>attestations-web-annotation.jsonld</code> file. The optional, repeatable <code>context</code> parameter restricts the export to the specified document named graphs; when omitted, all attestation graphs are exported. <code>includeMetadata</code>, which defaults to <code>false</code>, includes custom metadata and provenance information (<code>creator</code>, creation date, and last modification date). Each annotation contains the observables as its Body and a textual Target with <code>TextPositionSelector</code>, <code>TextQuoteSelector</code>, and <code>FragmentSelector</code>, calculated against the canonical NIF text using Unicode offsets. The operation is read-only: inconsistent data or unavailable canonical text results in <code>HTTP 422</code>, with no partial export.</td></tr>
                 </tbody>
             </table>
         </div>
