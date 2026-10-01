@@ -45,14 +45,14 @@
         <ul>
             <li><a onclick="navigate('home')">Home</a></li>
             <li><a onclick="navigate('models')">Linguistic Data Models</a></li>
-            <li><a onclick="navigate('othermodels')">Other Data Models</a></li>
-            <li><a onclick="navigate('types')">Resource Types</a></li>
+            <li><span class="nav-disabled" aria-disabled="true">Other Data Models</span></li>
+            <li><span class="nav-disabled" aria-disabled="true">Resource Types</span></li>
             <li class="dropdown">
                 <a id="services-trigger" aria-haspopup="true" aria-expanded="false">Services Documentation ▾</a>
                 <ul class="dropdown-menu">
-                    <li><a onclick="navigate('api-lexicon')">Lexicon API</a></li>
+                    <li><span class="nav-disabled" aria-disabled="true">Lexicon API</span></li>
                     <li><a onclick="navigate('api-wordnet')">WordNet API</a></li>
-                    <li><a onclick="navigate('api-dictionary')">Dictionary API</a></li>
+                    <li><span class="nav-disabled" aria-disabled="true">Dictionary API</span></li>
                     <li><a onclick="navigate('api-ecd')">ECD API</a></li>
                 </ul>
             </li>
@@ -78,7 +78,7 @@
                     <h3>🛠 RESTful Management</h3>
                     <p>Robust API services for dynamic manipulation of lexical resources modeled as RDF graphs.</p>
                 </div>
-                <div class="feature-card" onclick="window.open('https://github.com/ilc-cnr/LexO-server', '_blank')" tabindex="0">
+                <div class="feature-card" onclick="window.open('https://github.com/andreabellandi/LexO-server', '_blank', 'noopener,noreferrer')" tabindex="0">
                     <h3>🔓 Free &amp; Open Source</h3>
                     <p>LexO-server is freely available as <strong>open-source software</strong>, enabling transparent reuse, extension, and deployment without vendor lock-in.</p>
                 </div>
