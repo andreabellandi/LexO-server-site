@@ -360,6 +360,118 @@ const ATTESTATION_API_HTML = `
     </div>
 </div>`;
 
+
+const ECD_API_HTML = `
+<div class="content-block">
+    <div class="corpus-api-header">
+        <span class="api-eyebrow">Explanatory Combinatorial Dictionary services</span>
+        <h2>Explanatory Combinatorial Dictionary Services Documentation</h2>
+        <p class="api-lead">These services create, retrieve, update, and delete Explanatory Combinatorial Dictionary resources, including dictionaries, entries, forms, meanings, and lexical-function relations.</p>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Resource lifecycle</span>
+                <h3>Creation</h3>
+            </div>
+            <span class="service-count">5 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/create/ECDictionary</code></td><td>Create an EC dictionary</td><td>Creates an Explanatory Combinatorial Dictionary for <code>lang</code>. The request requires <code>prefix</code> and <code>baseIRI</code>, and optionally accepts <code>desiredID</code> and <code>author</code>. The namespace is validated before the new dictionary is returned as JSON.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/create/lexicalFunction</code></td><td>Create a lexical-function instance</td><td>Creates a lexical-function relation from the JSON body (<code>source</code>, <code>target</code>, <code>lexicalFunction</code>, and <code>type</code>). The request requires <code>prefix</code> and <code>baseIRI</code>, optionally accepts <code>desiredID</code> and <code>author</code>, and returns the created relation as JSON.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/create/ECDEntry</code></td><td>Create an ECD entry</td><td>Creates a dictionary entry from a JSON body containing <code>label</code>, <code>type</code>, <code>language</code>, and one or more <code>pos</code> values. The request requires <code>prefix</code> and <code>baseIRI</code>, optionally accepts <code>desiredID</code> and <code>author</code>, validates the entry type and language resources, and returns the created entry.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/create/ECDForm</code></td><td>Create ECD forms</td><td>Creates a form for the entry identified by <code>ECDEntry</code>, using the JSON fields <code>label</code>, <code>type</code>, <code>language</code>, and <code>pos</code>. The request requires <code>prefix</code> and <code>baseIRI</code>, optionally accepts <code>desiredID</code> and <code>author</code>, validates form type and language, and returns the forms created for the selected parts of speech.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/create/ECDMeaning</code></td><td>Create an ECD meaning</td><td>Creates the next ordered meaning for the dictionary entry <code>DictEntryID</code> and part of speech <code>pos</code>. The request requires <code>prefix</code> and <code>baseIRI</code>, optionally accepts <code>desiredID</code> and <code>author</code>, and returns the created meaning as JSON.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Search and inspection</span>
+                <h3>Retrieval</h3>
+            </div>
+            <span class="service-count">9 endpoints</span>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDComponents</code></td><td>List component elements</td><td>Returns the direct elements belonging to the ECD component identified by <code>id</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDEntrySemantics</code></td><td>Get an entry's semantic tree</td><td>Returns the recursively built hierarchy of meanings and nested components for the dictionary entry identified by <code>id</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDEntryMorphology</code></td><td>Get an entry's morphology</td><td>Returns the morphological forms associated with the dictionary entry identified by <code>id</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDEntry</code></td><td>Get ECD entry details</td><td>Returns the dictionary entry identified by <code>id</code>. A missing entry produces <code>HTTP 404</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDictionaries</code></td><td>List EC dictionaries</td><td>Returns all available Explanatory Combinatorial Dictionaries.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDictionary</code></td><td>Get EC dictionary details</td><td>Returns the dictionary identified by <code>id</code>.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/data/ECDEntries</code></td><td>Search ECD entries</td><td>Returns a paginated result with <code>totalHits</code> and matching entries. The JSON filter supports <code>text</code>, <code>searchMode</code>, <code>pos</code>, <code>author</code>, <code>lang</code>, <code>status</code>, <code>offset</code>, and <code>limit</code>.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDLexicaFunctions</code></td><td>List lexical functions for a sense</td><td>Returns the lexical-function relations in which the lexical sense identified by <code>id</code> participates.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/data/ECDMeaning</code></td><td>Get ECD meaning details</td><td>Returns the meaning (lexical sense) identified by <code>id</code>.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Legacy data removal</span>
+                <h3>Deletion</h3>
+            </div>
+            <span class="service-count">6 endpoints</span>
+        </div>
+        <div class="frontmatter-panel" style="grid-template-columns: 1fr; margin: 0 0 18px;">
+            <div class="frontmatter-copy">
+                <p>These legacy deletion operations are exposed as <code>GET</code> endpoints even though they modify data.</p>
+            </div>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/delete/lexicalFunction</code></td><td>Delete a lexical-function relation</td><td>Deletes the lexical-function relation identified by <code>id</code> and returns the manager result as plain text.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/delete/ECDForm</code></td><td>Delete an ECD form</td><td>Deletes the form identified by <code>id</code> and returns the manager result as plain text.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/delete/ECDEntry</code></td><td>Delete an ECD entry</td><td>Deletes the entry identified by <code>id</code>. By default, an entry with components is rejected; <code>force=true</code> bypasses that emptiness check.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/delete/ECDEntryPoS</code></td><td>Remove a part of speech from an entry</td><td>Removes <code>pos</code> from the entry identified by <code>id</code>. The operation is rejected if that part of speech is absent or its lexical entry still has forms or senses.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/delete/ECDictionary</code></td><td>Delete an EC dictionary</td><td>Deletes the dictionary identified by <code>id</code> only when it contains no entries.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/ecd/delete/ECDMeaning</code></td><td>Delete an ECD meaning</td><td>Deletes the resource identified by <code>idECDMeaning</code> after verifying that it is a lexical sense.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="api-service-group corpus-services-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Resource maintenance</span>
+                <h3>Update</h3>
+            </div>
+            <span class="service-count">4 endpoints</span>
+        </div>
+        <div class="frontmatter-panel" style="grid-template-columns: 1fr; margin: 0 0 18px;">
+            <div class="frontmatter-copy">
+                <p>Update bodies use <code>relation</code> and <code>value</code>; entry, form, and meaning updates may also use <code>oldPoS</code> when changing a part of speech.</p>
+            </div>
+        </div>
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/update/ECDEntry</code></td><td>Update an ECD entry</td><td>Applies the JSON updater to the dictionary entry identified by <code>id</code>. The request requires <code>author</code>, verifies that the target is an ECD entry, and returns the manager result as plain text.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/update/ECDForm</code></td><td>Update an ECD form</td><td>Applies the JSON updater to the form identified by <code>id</code>. The request requires <code>author</code>, verifies that the target is a form, and returns the manager result as plain text.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/update/ECDMeaning</code></td><td>Update an ECD meaning</td><td>Applies the JSON updater to the meaning identified by <code>id</code>. The request requires <code>author</code>, verifies that the target is a lexical sense, and returns the manager result as plain text.</td></tr>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/ecd/update/ECDMeaningOrdering</code></td><td>Update meaning ordering</td><td>Replaces the ordering metadata for meanings of the dictionary entry identified by <code>id</code>. The JSON body contains <code>meanings</code>, whose items supply <code>sense</code>, <code>romanNumber</code>, <code>arabicNumber</code>, and <code>letter</code>; the target must be a dictionary entry.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>`;
+
 $(document).ready(function () {
     const $trigger = $('#services-trigger');
     const $menu = $('.dropdown-menu');
@@ -424,6 +536,8 @@ function setupCorpusApi() {
             $('main').append($attestationSection);
         }
     }
+
+    $('#api-ecd').addClass('corpus-api').html(ECD_API_HTML);
 
     if (!$('#api-corpus').length) {
         const $section = $('<section>', {
