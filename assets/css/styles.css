@@ -132,6 +132,26 @@ nav ul li a:focus-visible {
     background: rgb(255 255 255 / 10%);
 }
 
+nav ul li .nav-disabled {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+    color: rgb(255 255 255 / 48%);
+    font-size: 0.95rem;
+    cursor: default;
+    user-select: none;
+}
+
+.dropdown-menu li .nav-disabled {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 12px 20px;
+    color: #9ca3af;
+    background-color: #f8fafc;
+}
+
 .dropdown-menu {
     position: absolute;
     top: 100%;
