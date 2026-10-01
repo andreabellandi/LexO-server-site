@@ -512,15 +512,15 @@ function setupCorpusApi() {
     const $servicesMenu = $('.dropdown-menu');
     $servicesMenu
         .html(`
-            <li><a onclick="navigate('api-lexicon')">Lexicon API</a></li>
+            <li><span class="nav-disabled" aria-disabled="true">Lexicon API</span></li>
             <li><a onclick="navigate('api-attestation')">Attestation API</a></li>
-            <li><a onclick="navigate('api-dictionary')">Dictionary API</a></li>
+            <li><span class="nav-disabled" aria-disabled="true">Dictionary API</span></li>
             <li><a onclick="navigate('api-ecd')">Explanatory Combinatorial Dictionary API</a></li>
             <li><a onclick="navigate('api-corpus')">Corpus API</a></li>
         `)
         .css('min-width', '400px');
 
-    $servicesMenu.find('a').css('white-space', 'nowrap');
+    $servicesMenu.find('a, .nav-disabled').css('white-space', 'nowrap');
 
     if (!$('#api-attestation').length) {
         const $attestationSection = $('<section>', {
