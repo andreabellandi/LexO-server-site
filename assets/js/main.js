@@ -358,6 +358,40 @@ const ATTESTATION_API_HTML = `
             <p>Creation, update, and deletion operations automatically maintain the corresponding <code>frac:Frequency</code> resources.</p>
         </div>
     </div>
+
+    <div class="api-service-group">
+        <div class="api-section-heading">
+            <div>
+                <span class="api-eyebrow">Methodological provenance</span>
+                <h3>Collocation Processing Profile (CPP)</h3>
+            </div>
+            <span class="service-count">6 endpoints</span>
+        </div>
+
+        <div class="frontmatter-panel" style="grid-template-columns: 1fr;">
+            <div class="frontmatter-copy">
+                <span class="api-eyebrow">About CPP</span>
+                <h3>Reproducible collocation processing</h3>
+                <p>The <a href="https://github.com/giuliabenotto/collocation-processing-profile" target="_blank" rel="noopener noreferrer">Collocation Processing Profile (CPP)</a> is an ontology designed to represent the methodological provenance of corpus-based collocation extraction processes.</p>
+                <p>It explicitly models processing parameters, procedures, execution activities, and their relationships to collocational observations represented in OntoLex-FrAC.</p>
+                <p>Building on <a href="https://github.com/giuliabenotto/collscore" target="_blank" rel="noopener noreferrer">CollScore — A Vocabulary for Collocation Scoring Measures</a>, CPP supports the reproducibility, traceability, comparability, and interoperable reuse of collocational data.</p>
+            </div>
+        </div>
+
+        <div class="api-table-wrap">
+            <table class="api-table">
+                <thead><tr><th>Method</th><th>Endpoint</th><th>Function</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="method post">POST</span></td><td><code class="endpoint-code">/cpp/runs</code></td><td>Register a CPP extraction run</td><td>Registers the provenance of a successfully completed collocation extraction without executing Lucene or creating FrAC collocations. The JSON body contains the effective search parameters, the explicit <code>ordered</code> option, corpus snapshot, index, software, optional execution timestamps and author, and at least one existing FrAC collocation IRI. An optional <code>Idempotency-Key</code> makes retries safe. Returns <code>HTTP 201</code> for a new run or <code>HTTP 200</code> for an idempotent replay.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/cpp/runs</code></td><td>List CPP extraction runs</td><td>Returns a paginated list containing <code>total</code>, <code>limit</code>, <code>offset</code>, and <code>items</code>. Exact filters are combined with AND and include <code>node</code>, <code>collocationIRI</code>, <code>corpusIRI</code>, <code>measure</code>, <code>author</code>, and the inclusive registration interval <code>from</code>/<code>to</code>. Results are ordered by registration time descending and then by IRI.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/cpp/runs/{id}</code></td><td>Get CPP run details</td><td>Returns the complete provenance record for the run identified by its canonical lowercase UUID, including effective search parameters, CPP options, corpus snapshot, index, software, execution times, associated collocations, author, and registration timestamp.</td></tr>
+                    <tr><td><span class="method post">PATCH</span></td><td><code class="endpoint-code">/cpp/runs/{id}</code></td><td>Correct collocation associations</td><td>Updates only the FrAC collocations associated with a recorded run. The JSON body accepts the non-overlapping arrays <code>addCollocations</code> and <code>removeCollocations</code>; additions and removals are idempotent, all new IRIs are validated before writing, and the last remaining collocation cannot be removed. Historical extraction parameters remain immutable.</td></tr>
+                    <tr><td><span class="method delete">DELETE</span></td><td><code class="endpoint-code">/cpp/runs/{id}</code></td><td>Delete CPP provenance</td><td>Deletes the selected CPP run, its exclusive child resources, and its structural observation triples. Existing FrAC collocations, global software descriptions, and other runs are preserved. Returns <code>HTTP 204</code> without a response body.</td></tr>
+                    <tr><td><span class="method get">GET</span></td><td><code class="endpoint-code">/cpp/runs/export</code></td><td>Export CPP provenance as Turtle</td><td>Exports selected runs, or all runs when <code>run</code> is omitted, as a flattened <code>text/turtle</code> file. The repeatable <code>run</code> parameter accepts complete run IRIs. With <code>includeCollocations=true</code>, the export also includes explicit FrAC descriptions and their score/count data; the default is <code>false</code>. The result is an RDF extract, not a named-graph backup.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>`;
 
 
