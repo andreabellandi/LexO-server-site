@@ -7,6 +7,7 @@
         'api-lexicon': '/services/lexicon-api',
         'api-wordnet': '/services/wordnet-api',
         'api-attestation': '/services/attestation-api',
+        'api-collocation': '/services/collocation-api',
         'api-dictionary': '/services/dictionary-api',
         'api-ecd': '/services/explanatory-combinatorial-dictionary-api',
         'api-corpus': '/services/corpus-api',

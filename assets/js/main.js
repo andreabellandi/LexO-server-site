@@ -359,6 +359,16 @@ const ATTESTATION_API_HTML = `
         </div>
     </div>
 
+</div>`;
+
+const COLLOCATION_API_HTML = `
+<div class="content-block">
+    <div class="corpus-api-header">
+        <span class="api-eyebrow">Collocation processing services</span>
+        <h2>Collocation Services Documentation</h2>
+        <p class="api-lead">These services manage the methodological provenance of corpus-based collocation extraction runs and their associations with OntoLex-FrAC observations.</p>
+    </div>
+
     <div class="api-service-group">
         <div class="api-section-heading">
             <div>
@@ -548,6 +558,7 @@ function setupCorpusApi() {
         .html(`
             <li><span class="nav-disabled" aria-disabled="true">Lexicon API</span></li>
             <li><a onclick="navigate('api-attestation')">Attestation API</a></li>
+            <li><a onclick="navigate('api-collocation')">Collocation API</a></li>
             <li><span class="nav-disabled" aria-disabled="true">Dictionary API</span></li>
             <li><a onclick="navigate('api-ecd')">Explanatory Combinatorial Dictionary API</a></li>
             <li><a onclick="navigate('api-corpus')">Corpus API</a></li>
@@ -568,6 +579,21 @@ function setupCorpusApi() {
             $attestationSection.insertAfter($lexiconSection);
         } else {
             $('main').append($attestationSection);
+        }
+    }
+
+    if (!$('#api-collocation').length) {
+        const $collocationSection = $('<section>', {
+            id: 'api-collocation',
+            class: 'corpus-api',
+            html: COLLOCATION_API_HTML
+        });
+
+        const $attestationSection = $('#api-attestation');
+        if ($attestationSection.length) {
+            $collocationSection.insertAfter($attestationSection);
+        } else {
+            $('main').append($collocationSection);
         }
     }
 
