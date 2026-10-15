@@ -378,7 +378,7 @@ const COLLOCATION_API_HTML = `
             <span class="service-count">6 endpoints</span>
         </div>
 
-        <div class="frontmatter-panel" style="grid-template-columns: 1fr;">
+        <div class="frontmatter-panel cpp-intro-card">
             <div class="frontmatter-copy">
                 <span class="api-eyebrow">About CPP</span>
                 <h3>Reproducible collocation processing</h3>

@@ -136,6 +136,53 @@
     text-align: left;
 }
 
+/* CPP introduction card: match the site's typography and brand palette. */
+#api-collocation .cpp-intro-card {
+    grid-template-columns: minmax(0, 1fr);
+    border: 1px solid var(--border-color);
+    border-top: 3px solid var(--inst-red);
+    background: #fff;
+    color: var(--text-main);
+    font-family: "Source Sans Pro", sans-serif;
+    box-shadow: 0 8px 24px rgb(15 23 42 / 6%);
+}
+
+#api-collocation .cpp-intro-card .api-eyebrow {
+    color: var(--inst-red);
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+#api-collocation .cpp-intro-card h3 {
+    color: var(--inst-blue);
+    font-family: "Playfair Display", serif;
+}
+
+#api-collocation .cpp-intro-card p {
+    color: var(--text-main);
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+#api-collocation .cpp-intro-card a,
+#api-collocation .cpp-intro-card a:visited {
+    color: var(--inst-blue);
+    font-family: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s ease;
+}
+
+#api-collocation .cpp-intro-card a:hover,
+#api-collocation .cpp-intro-card a:focus-visible {
+    color: var(--inst-red);
+}
+
+#api-collocation .cpp-intro-card a:focus-visible {
+    outline: 2px solid var(--inst-red);
+    outline-offset: 3px;
+}
+
 .frontmatter-code {
     overflow-x: auto;
     margin: 0;
