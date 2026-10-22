@@ -45,7 +45,7 @@
         <ul>
             <li><a onclick="navigate('home')">Home</a></li>
             <li><a onclick="navigate('models')">Linguistic Data Models</a></li>
-            <li><span class="nav-disabled" aria-disabled="true">Other Data Models</span></li>
+            <li><a onclick="navigate('othermodels')">Other Data Models</a></li>
             <li><span class="nav-disabled" aria-disabled="true">Resource Types</span></li>
             <li class="dropdown">
                 <a id="services-trigger" aria-haspopup="true" aria-expanded="false">Services Documentation ▾</a>
@@ -143,7 +143,37 @@
             </div>
         </section>
 
-        <section id="othermodels"><div class="content-block"><h2>Other Data Models</h2><p>This section will document additional models supported by the LexO-server Suite.</p></div></section>
+        <section id="othermodels">
+    <div class="content-block">
+        <h2>Other Data Models</h2>
+        <div class="highlight-box">
+            <p>Alongside the vocabularies developed by the W3C OntoLex Community Group, LexO-server supports complementary semantic models that address specialised representation needs. These models build on established Semantic Web vocabularies, extending specific aspects of the OntoLex ecosystem while preserving interoperability with existing standards.</p>
+        </div>
+        <div class="architecture-container">
+            <article class="model-entry">
+                <div class="model-meta">Supporting Model</div>
+                <h3>Collocation Processing Profile (CPP)</h3>
+                <p class="model-desc">The Collocation Processing Profile (CPP) is an ontological model for representing the methodological provenance of collocation extraction. By integrating P-Plan, PROV-O, and OntoLex-FrAC, it connects extraction plans, processing parameters, corpus resources, and resulting collocation observations, enabling the conditions behind statistical results to be traced and compared.</p>
+                <figure class="cpp-figure">
+                    <div class="cpp-figure-image">
+                        <button type="button" class="cpp-zoom-target" onclick="document.getElementById('cpp-lightbox').showModal()" aria-label="Enlarge the CPP architecture diagram" title="Click to enlarge the diagram">
+                            <img src="https://raw.githubusercontent.com/giuliabenotto/collocation-processing-profile/main/cpp-overview-en.png" alt="CPP ontology diagram showing the Planning, Execution, and Observation layers" loading="lazy">
+                        </button>
+                    </div>
+                    <figcaption class="cpp-caption"><strong>CPP Architecture.</strong> The architecture separates three interconnected layers. <strong>Planning</strong> (P-Plan) defines a reusable extraction procedure and its input and output variables, including the corpus, context window, linguistic constraints, and association measures. <strong>Execution</strong> (P-Plan and PROV-O) records individual processing runs, the actual parameter values, corpus snapshots and indexes, and the software or lexicographers involved. <strong>Observation</strong> (OntoLex-FrAC) represents the resulting collocations and links them to their extraction provenance. Together, these layers support traceability, methodological comparison, and reproducibility.</figcaption>
+                </figure>
+                <div class="cpp-links">
+                    <a href="https://github.com/giuliabenotto/collocation-processing-profile" target="_blank" rel="noopener noreferrer" class="details-link">CPP Ontology &amp; Documentation ↗</a>
+                    <a href="#/services/collocation-api" class="details-link">Collocation API →</a>
+                </div>
+            </article>
+        </div>
+    </div>
+    <dialog id="cpp-lightbox" class="cpp-lightbox" aria-label="Enlarged CPP architecture diagram" onclick="if(event.target === this) this.close()">
+        <button type="button" class="cpp-lightbox-close" onclick="document.getElementById('cpp-lightbox').close()" aria-label="Close diagram">×</button>
+        <img src="https://raw.githubusercontent.com/giuliabenotto/collocation-processing-profile/main/cpp-overview-en.png" alt="Enlarged Collocation Processing Profile architecture diagram">
+    </dialog>
+</section>
         <section id="types"><div class="content-block"><h2>Resource Types</h2><p>Support for dictionaries, WordNets, etymological lexicons, and other linked linguistic resources.</p></div></section>
 
         <section id="api-lexicon">

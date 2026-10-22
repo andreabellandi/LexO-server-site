@@ -725,3 +725,113 @@ footer {
         overflow-x: auto;
     }
 }
+
+/* Other Data Models: Collocation Processing Profile */
+#othermodels .highlight-box p {
+    margin-bottom: 0;
+    line-height: 1.55;
+}
+#othermodels .cpp-figure {
+    max-width: 960px;
+    margin: 26px 0 0 40px;
+}
+#othermodels .cpp-figure-image {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background: #fff;
+    text-align: center;
+}
+#othermodels .cpp-zoom-target {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+}
+#othermodels .cpp-zoom-target:focus-visible {
+    outline: 3px solid var(--inst-red);
+    outline-offset: 4px;
+}
+#othermodels .cpp-figure-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+#othermodels .cpp-caption {
+    margin-top: 15px;
+    padding: 15px 18px;
+    border-left: 3px solid var(--border-color);
+    color: #4b5563;
+    background: #f8fafc;
+    font-size: 0.97rem;
+    line-height: 1.6;
+    text-align: justify;
+}
+#othermodels .cpp-caption strong {
+    color: var(--inst-blue);
+}
+#othermodels .cpp-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 0 40px;
+}
+#othermodels .cpp-links .details-link {
+    margin-left: 0;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+#othermodels .cpp-lightbox {
+    position: fixed;
+    width: fit-content;
+    max-width: 95vw;
+    max-height: 94vh;
+    margin: auto;
+    padding: 22px;
+    border: 0;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 15px 55px rgb(0 0 0 / 30%);
+}
+#othermodels .cpp-lightbox::backdrop {
+    background: rgb(15 23 42 / 90%);
+}
+#othermodels .cpp-lightbox img {
+    display: block;
+    max-width: calc(95vw - 44px);
+    max-height: calc(94vh - 44px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+#othermodels .cpp-lightbox-close {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    padding: 0 7px;
+    border: 0;
+    border-radius: 3px;
+    color: var(--inst-blue);
+    background: rgb(255 255 255 / 90%);
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+@media (max-width: 650px) {
+    #othermodels .model-desc,
+    #othermodels .cpp-figure,
+    #othermodels .cpp-links {
+        margin-left: 0;
+    }
+    #othermodels .cpp-figure-image {
+        padding: 4px;
+    }
+    #othermodels .cpp-caption {
+        font-size: 0.91rem;
+        text-align: left;
+    }
+}
